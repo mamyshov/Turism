@@ -1,0 +1,131 @@
+// KyrgyzTour Hub — data model
+//
+// Dev uses SQLite for zero-config local setup. For production, switch the
+// datasource provider to "postgresql" (e.g. Supabase) and set DATABASE_URL
+// accordingly.
+//
+// SQLite supports neither enums nor native string arrays, so:
+//   - "enum" fields below are plain String columns; allowed values are
+//     enforced in application code (see src/lib/constants.ts) and documented
+//     next to each field. Switching to Postgres later, turn these into real
+//     `enum` types for DB-level validation.
+//   - multi-value fields (languages, categories) are JSON-encoded strings,
+//     (de)serialized via src/lib/json.ts. On Postgres these could become a
+//     native String[] column instead.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      String   @default("COMPANY") // "COMPANY" | "ADMIN"
+  createdAt DateTime @default(now())
+
+  company Company?
+}
+
+model Company {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name String
+  slug String @unique
+  type String // "LEGAL" (турфирма) | "INDIVIDUAL" (частный гид)
+
+  description String?
+  region      String? // key from lib/constants.ts REGIONS
+  languages   String  @default("[]") // JSON string[] of lib/constants.ts LANGUAGES keys
+  categories  String  @default("[]") // JSON string[] of lib/constants.ts TOUR_CATEGORIES keys
+
+  phone        String?
+  whatsapp     String?
+  instagram    String?
+  contactEmail String?
+
+  verificationDocument String?
+  verificationStatus   String  @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"
+  verificationComment  String?
+
+  tariff    String @default("BASIC") // "BASIC" | "STANDARD" | "PRO"
+  viewCount Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  photos    Photo[]
+  videos    Video[]
+  pdfGuides PdfGuide[]
+  tours     Tour[]
+  reviews   Review[]
+
+  @@index([region])
+  @@index([verificationStatus])
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+/// Stage 2: video guides (embed link or uploaded file). Schema included now
+/// so the dashboard/media UI can be extended without a migration.
+model Video {
+  id        String   @id @default(cuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  type      String // "EMBED" | "UPLOAD"
+  url       String
+  title     String?
+  createdAt DateTime @default(now())
+}
+
+/// Stage 2: downloadable PDF guides/routes.
+model PdfGuide {
+  id        String   @id @default(cuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  title     String
+  url       String
+  createdAt DateTime @default(now())
+}
+
+model Tour {
+  id            String   @id @default(cuid())
+  companyId     String
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  title         String
+  description   String?
+  durationDays  Int?
+  durationHours Int?
+  price         Int // in KGS
+  maxPeople     Int?
+  included      String?
+  excluded      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+/// Stage 2: reviews & ratings left by tourists.
+model Review {
+  id          String   @id @default(cuid())
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  authorName  String
+  authorEmail String
+  rating      Int // 1-5
+  text        String?
+  createdAt   DateTime @default(now())
+}
