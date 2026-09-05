@@ -3,6 +3,7 @@ import Link from "next/link";
 const NAV = [
   { href: "/admin/moderation", label: "Модерация" },
   { href: "/admin/companies", label: "Все турфирмы" },
+  { href: "/admin/reviews", label: "Отзывы" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

@@ -55,8 +55,9 @@ model Company {
   verificationStatus   String  @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"
   verificationComment  String?
 
-  tariff    String @default("BASIC") // "BASIC" | "STANDARD" | "PRO"
-  viewCount Int    @default(0)
+  tariff    String  @default("BASIC") // "BASIC" | "STANDARD" | "PRO"
+  viewCount Int     @default(0)
+  isBlocked Boolean @default(false) // set by an admin; hides the company from the public catalog
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

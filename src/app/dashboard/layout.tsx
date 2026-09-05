@@ -31,10 +31,22 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 : `Заявка отклонена${company.verificationComment ? ": " + company.verificationComment : "."}`}
             </p>
           )}
+          {company.isBlocked && (
+            <p className="mt-1 text-sm text-red-600">
+              Профиль заблокирован администратором и скрыт из каталога.
+            </p>
+          )}
         </div>
-        <span className={`rounded-full px-3 py-1 text-xs font-medium ${status.className}`}>
-          {status.text}
-        </span>
+        <div className="flex gap-2">
+          {company.isBlocked && (
+            <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">
+              Заблокирован
+            </span>
+          )}
+          <span className={`rounded-full px-3 py-1 text-xs font-medium ${status.className}`}>
+            {status.text}
+          </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8">

@@ -15,7 +15,7 @@ type SearchParams = {
 };
 
 async function getCompanies(params: SearchParams) {
-  const where: Prisma.CompanyWhereInput = { verificationStatus: "APPROVED" };
+  const where: Prisma.CompanyWhereInput = { verificationStatus: "APPROVED", isBlocked: false };
 
   if (params.region) where.region = params.region;
   if (params.category) where.categories = { contains: `"${params.category}"` };
@@ -42,7 +42,10 @@ async function getCompanies(params: SearchParams) {
 
   const companies = await prisma.company.findMany({
     where,
-    include: { photos: { orderBy: { order: "asc" }, take: 1 } },
+    include: {
+      photos: { orderBy: { order: "asc" }, take: 1 },
+      reviews: { select: { rating: true } },
+    },
   });
 
   return companies.sort((a, b) => TARIFF_ORDER[a.tariff] - TARIFF_ORDER[b.tariff]);

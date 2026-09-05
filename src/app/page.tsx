@@ -7,8 +7,11 @@ const TARIFF_ORDER: Record<string, number> = { PRO: 0, STANDARD: 1, BASIC: 2 };
 
 async function getFeaturedCompanies() {
   const companies = await prisma.company.findMany({
-    where: { verificationStatus: "APPROVED" },
-    include: { photos: { orderBy: { order: "asc" }, take: 1 } },
+    where: { verificationStatus: "APPROVED", isBlocked: false },
+    include: {
+      photos: { orderBy: { order: "asc" }, take: 1 },
+      reviews: { select: { rating: true } },
+    },
     take: 30,
   });
   return companies

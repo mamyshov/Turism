@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { fromJsonArray } from "@/lib/json";
 import { labelFor, REGIONS, LANGUAGES, TOUR_CATEGORIES } from "@/lib/constants";
+import { computeRating } from "@/lib/rating";
 import { PhotoGallery } from "@/components/PhotoGallery";
+import { StarRating } from "@/components/StarRating";
+import { ReviewForm } from "./ReviewForm";
 
 async function getCompany(slug: string) {
   const company = await prisma.company.findUnique({
@@ -14,9 +16,10 @@ async function getCompany(slug: string) {
       tours: { orderBy: { createdAt: "asc" } },
       videos: true,
       pdfGuides: true,
+      reviews: { orderBy: { createdAt: "desc" } },
     },
   });
-  if (!company || company.verificationStatus !== "APPROVED") return null;
+  if (!company || company.verificationStatus !== "APPROVED" || company.isBlocked) return null;
   return company;
 }
 
@@ -45,6 +48,7 @@ export default async function CompanyPage({ params }: { params: { slug: string }
 
   const languages = fromJsonArray(company.languages);
   const categories = fromJsonArray(company.categories);
+  const rating = computeRating(company.reviews);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
@@ -58,9 +62,15 @@ export default async function CompanyPage({ params }: { params: { slug: string }
               </span>
             )}
           </div>
-          {company.region && (
-            <p className="mt-1 text-gray-500">📍 {labelFor(REGIONS, company.region)}</p>
-          )}
+          <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-gray-500">
+            {company.region && <p>📍 {labelFor(REGIONS, company.region)}</p>}
+            {rating.count > 0 && (
+              <p className="flex items-center gap-1.5">
+                <StarRating value={rating.average} />
+                <span className="text-sm">{rating.average} ({rating.count})</span>
+              </p>
+            )}
+          </div>
         </div>
 
         <ContactButtons company={company} />
@@ -173,6 +183,35 @@ export default async function CompanyPage({ params }: { params: { slug: string }
           </div>
         </div>
       )}
+
+      <div className="mt-10">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold">
+            Отзывы {rating.count > 0 && <span className="text-gray-400">({rating.count})</span>}
+          </h2>
+        </div>
+
+        <div className="mb-6">
+          <ReviewForm companyId={company.id} />
+        </div>
+
+        {company.reviews.length > 0 && (
+          <div className="space-y-4">
+            {company.reviews.map((review) => (
+              <div key={review.id} className="rounded-lg border border-gray-200 p-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">{review.authorName}</span>
+                  <StarRating value={review.rating} size="sm" />
+                </div>
+                {review.text && <p className="mt-2 text-sm text-gray-700 whitespace-pre-line">{review.text}</p>}
+                <p className="mt-2 text-xs text-gray-400">
+                  {review.createdAt.toLocaleDateString("ru-RU")}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

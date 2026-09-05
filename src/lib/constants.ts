@@ -81,6 +81,14 @@ export const ALLOWED_VERIFICATION_TYPES = [
   "image/jpeg",
   "image/png",
 ];
+export const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/quicktime"];
+export const ALLOWED_PDF_TYPES = ["application/pdf"];
+
+// Per tariff table (раздел 5 ТЗ): видео и PDF-гиды доступны со «Стандарт».
+const VIDEO_PDF_TARIFFS = new Set(["STANDARD", "PRO"]);
+export function canUploadVideoOrPdf(tariff: string): boolean {
+  return VIDEO_PDF_TARIFFS.has(tariff);
+}
 
 export function labelFor(
   list: readonly { key: string; label: string }[],

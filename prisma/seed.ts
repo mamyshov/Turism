@@ -31,6 +31,14 @@ async function main() {
       tours: [
         { title: "Треккинг к озеру Ала-Кёль", price: 8500, durationDays: 3, maxPeople: 10 },
       ],
+      videos: [
+        { type: "EMBED", url: "https://www.youtube.com/embed/dQw4w9WgXcQ", title: "Обзор маршрута Ала-Кёль" },
+      ],
+      pdfGuides: [] as { title: string; url: string }[],
+      reviews: [
+        { authorName: "Айгуль", authorEmail: "aigul@example.com", rating: 5, text: "Отличный тур, спасибо гиду!" },
+        { authorName: "John", authorEmail: "john@example.com", rating: 4, text: "Great scenery, well organized." },
+      ],
     },
     {
       email: "osh-culture@example.com",
@@ -44,6 +52,11 @@ async function main() {
       tariff: "STANDARD" as const,
       tours: [
         { title: "Гастротур по Ошскому базару", price: 2500, durationHours: 4, maxPeople: 15 },
+      ],
+      videos: [] as { type: string; url: string; title: string }[],
+      pdfGuides: [] as { title: string; url: string }[],
+      reviews: [
+        { authorName: "Nurlan", authorEmail: "nurlan@example.com", rating: 5, text: "Очень вкусно и интересно!" },
       ],
     },
     {
@@ -59,6 +72,9 @@ async function main() {
       tours: [
         { title: "Конный тур к Сон-Кёлю", price: 12000, durationDays: 5, maxPeople: 6 },
       ],
+      videos: [] as { type: string; url: string; title: string }[],
+      pdfGuides: [] as { title: string; url: string }[],
+      reviews: [] as { authorName: string; authorEmail: string; rating: number; text: string }[],
     },
   ];
 
@@ -88,6 +104,9 @@ async function main() {
         verificationStatus: "APPROVED",
         tariff: c.tariff,
         tours: { create: c.tours },
+        videos: { create: c.videos },
+        pdfGuides: { create: c.pdfGuides },
+        reviews: { create: c.reviews },
       },
     });
   }
