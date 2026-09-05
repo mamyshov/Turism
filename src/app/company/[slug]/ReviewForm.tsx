@@ -2,8 +2,9 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 
-export function ReviewForm({ companyId }: { companyId: string }) {
+export function ReviewForm({ companyId, dict }: { companyId: string; dict: Dictionary["company"] }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(5);
@@ -28,7 +29,7 @@ export function ReviewForm({ companyId }: { companyId: string }) {
     setSaving(false);
 
     if (!res.ok) {
-      setError(data.error ?? "Не удалось отправить отзыв.");
+      setError(data.error ?? "Error");
       return;
     }
     setDone(true);
@@ -36,7 +37,7 @@ export function ReviewForm({ companyId }: { companyId: string }) {
   }
 
   if (done) {
-    return <p className="text-sm text-green-700">Спасибо за отзыв!</p>;
+    return <p className="text-sm text-green-700">{dict.reviewThanks}</p>;
   }
 
   if (!open) {
@@ -45,7 +46,7 @@ export function ReviewForm({ companyId }: { companyId: string }) {
         onClick={() => setOpen(true)}
         className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50"
       >
-        Оставить отзыв
+        {dict.leaveReview}
       </button>
     );
   }
@@ -53,14 +54,14 @@ export function ReviewForm({ companyId }: { companyId: string }) {
   return (
     <form onSubmit={handleSubmit} className="max-w-md space-y-3 rounded-lg border border-gray-200 p-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Оценка</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{dict.reviewFormRating}</label>
         <div className="flex gap-1 text-2xl text-amber-500">
           {[1, 2, 3, 4, 5].map((i) => (
             <button
               type="button"
               key={i}
               onClick={() => setRating(i)}
-              aria-label={`${i} из 5`}
+              aria-label={`${i} / 5`}
               className="leading-none"
             >
               {i <= rating ? "★" : "☆"}
@@ -71,7 +72,7 @@ export function ReviewForm({ companyId }: { companyId: string }) {
       <input
         value={authorName}
         onChange={(e) => setAuthorName(e.target.value)}
-        placeholder="Ваше имя"
+        placeholder={dict.reviewFormName}
         required
         className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
       />
@@ -79,14 +80,14 @@ export function ReviewForm({ companyId }: { companyId: string }) {
         type="email"
         value={authorEmail}
         onChange={(e) => setAuthorEmail(e.target.value)}
-        placeholder="Email"
+        placeholder={dict.reviewFormEmail}
         required
         className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
       />
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Ваш отзыв (необязательно)"
+        placeholder={dict.reviewFormText}
         rows={3}
         className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
       />
@@ -99,10 +100,10 @@ export function ReviewForm({ companyId }: { companyId: string }) {
           disabled={saving}
           className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
         >
-          {saving ? "Отправка…" : "Отправить"}
+          {saving ? "…" : dict.reviewFormSubmit}
         </button>
         <button type="button" onClick={() => setOpen(false)} className="rounded-md border border-gray-300 px-4 py-2 text-sm">
-          Отмена
+          {dict.reviewFormCancel}
         </button>
       </div>
     </form>

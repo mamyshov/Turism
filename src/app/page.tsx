@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { CompanyCard } from "@/components/CompanyCard";
-import { REGIONS, TOUR_CATEGORIES } from "@/lib/constants";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getDictionary } from "@/lib/i18n/dictionary";
+import { localizedRegions, localizedCategories } from "@/lib/i18n/constant-labels";
 
 const TARIFF_ORDER: Record<string, number> = { PRO: 0, STANDARD: 1, BASIC: 2 };
 
@@ -21,32 +23,31 @@ async function getFeaturedCompanies() {
 
 export default async function HomePage() {
   const featured = await getFeaturedCompanies();
+  const locale = getLocale();
+  const dict = getDictionary(locale).home;
+  const regions = localizedRegions(locale);
+  const categories = localizedCategories(locale);
 
   return (
     <div>
       <section className="bg-gradient-to-b from-brand-700 to-brand-600 text-white">
         <div className="mx-auto max-w-6xl px-4 py-20 text-center">
-          <h1 className="text-3xl sm:text-5xl font-bold">
-            Найдите проверенных гидов и турфирмы Кыргызстана
-          </h1>
-          <p className="mt-4 text-brand-50 text-lg max-w-2xl mx-auto">
-            Треккинг, конные туры, гастротуризм, культурные и экстрим-туры — от
-            Иссык-Куля до Оша.
-          </p>
+          <h1 className="text-3xl sm:text-5xl font-bold">{dict.heroTitle}</h1>
+          <p className="mt-4 text-brand-50 text-lg max-w-2xl mx-auto">{dict.heroSubtitle}</p>
 
           <form action="/search" className="mt-8 mx-auto max-w-xl flex gap-2">
             <input
               name="q"
-              placeholder="Например: треккинг на Иссык-Куле"
+              placeholder={dict.searchPlaceholder}
               className="flex-1 rounded-md border-0 px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-300"
             />
             <button className="rounded-md bg-white px-5 py-3 font-medium text-brand-700 hover:bg-brand-50">
-              Искать
+              {dict.searchButton}
             </button>
           </form>
 
           <div className="mt-6 flex flex-wrap justify-center gap-2">
-            {REGIONS.slice(0, 6).map((r) => (
+            {regions.slice(0, 6).map((r) => (
               <Link
                 key={r.key}
                 href={`/search?region=${r.key}`}
@@ -60,9 +61,9 @@ export default async function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-14">
-        <h2 className="text-xl font-bold mb-2">Категории туров</h2>
+        <h2 className="text-xl font-bold mb-2">{dict.categoriesTitle}</h2>
         <div className="flex flex-wrap gap-2 mb-10">
-          {TOUR_CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <Link
               key={c.key}
               href={`/search?category=${c.key}`}
@@ -74,21 +75,21 @@ export default async function HomePage() {
         </div>
 
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">Топ турфирм</h2>
+          <h2 className="text-xl font-bold">{dict.topCompaniesTitle}</h2>
           <Link href="/search" className="text-sm font-medium text-brand-700">
-            Смотреть все →
+            {dict.viewAll}
           </Link>
         </div>
 
         {featured.length === 0 ? (
           <p className="text-gray-500 text-sm">
-            Пока нет проверенных турфирм. Станьте первыми —{" "}
-            <Link href="/register" className="text-brand-700 font-medium">зарегистрируйтесь</Link>.
+            {dict.emptyState}{" "}
+            <Link href="/register" className="text-brand-700 font-medium">{dict.emptyStateLink}</Link>.
           </p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((company) => (
-              <CompanyCard key={company.id} company={company} />
+              <CompanyCard key={company.id} company={company} locale={locale} />
             ))}
           </div>
         )}

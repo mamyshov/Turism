@@ -27,10 +27,9 @@ export default async function AdminCompaniesPage() {
               <th className="px-4 py-2">Название</th>
               <th className="px-4 py-2">Email</th>
               <th className="px-4 py-2">Регион</th>
-              <th className="px-4 py-2">Тариф</th>
               <th className="px-4 py-2">Статус</th>
               <th className="px-4 py-2">Просмотры</th>
-              <th className="px-4 py-2">Действия</th>
+              <th className="px-4 py-2">Тариф / Действия</th>
             </tr>
           </thead>
           <tbody className="divide-y">
@@ -52,11 +51,10 @@ export default async function AdminCompaniesPage() {
                 </td>
                 <td className="px-4 py-2 text-gray-500">{c.user.email}</td>
                 <td className="px-4 py-2">{labelFor(REGIONS, c.region)}</td>
-                <td className="px-4 py-2">{c.tariff}</td>
                 <td className="px-4 py-2">{STATUS_LABEL[c.verificationStatus]}</td>
                 <td className="px-4 py-2">{c.viewCount}</td>
                 <td className="px-4 py-2">
-                  <AdminCompanyActions companyId={c.id} isBlocked={c.isBlocked} />
+                  <AdminCompanyActions companyId={c.id} isBlocked={c.isBlocked} tariff={c.tariff} />
                 </td>
               </tr>
             ))}

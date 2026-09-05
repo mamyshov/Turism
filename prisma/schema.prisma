@@ -62,14 +62,27 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  photos    Photo[]
-  videos    Video[]
-  pdfGuides PdfGuide[]
-  tours     Tour[]
-  reviews   Review[]
+  photos      Photo[]
+  videos      Video[]
+  pdfGuides   PdfGuide[]
+  tours       Tour[]
+  reviews     Review[]
+  dailyViews  DailyView[]
 
   @@index([region])
   @@index([verificationStatus])
+}
+
+/// Stage 3: per-day view counts backing the dashboard stats chart.
+/// Company.viewCount stays as the fast-to-read running total.
+model DailyView {
+  id        String   @id @default(cuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  date      String // "YYYY-MM-DD", UTC
+  count     Int      @default(0)
+
+  @@unique([companyId, date])
 }
 
 model Photo {

@@ -3,6 +3,8 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getDictionary } from "@/lib/i18n/dictionary";
 
 export const metadata: Metadata = {
   title: {
@@ -18,13 +20,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const locale = getLocale();
+  const dict = getDictionary(locale);
+
   return (
-    <html lang="ru">
+    <html lang={locale}>
       <body className="min-h-screen flex flex-col">
         <Providers>
-          <Navbar />
+          <Navbar locale={locale} dict={dict.nav} />
           <main className="flex-1">{children}</main>
-          <Footer />
+          <Footer tagline={dict.footer.tagline} nav={dict.nav} />
         </Providers>
       </body>
     </html>

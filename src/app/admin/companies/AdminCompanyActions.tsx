@@ -3,12 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+const TARIFFS = ["BASIC", "STANDARD", "PRO"];
+
 export function AdminCompanyActions({
   companyId,
   isBlocked,
+  tariff,
 }: {
   companyId: string;
   isBlocked: boolean;
+  tariff: string;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -24,6 +28,17 @@ export function AdminCompanyActions({
     router.refresh();
   }
 
+  async function changeTariff(newTariff: string) {
+    setBusy(true);
+    await fetch(`/api/admin/companies/${companyId}/tariff`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tariff: newTariff }),
+    });
+    setBusy(false);
+    router.refresh();
+  }
+
   async function handleDelete() {
     if (!confirm("Удалить турфирму и все её данные безвозвратно?")) return;
     setBusy(true);
@@ -32,7 +47,17 @@ export function AdminCompanyActions({
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex items-center gap-2">
+      <select
+        value={tariff}
+        disabled={busy}
+        onChange={(e) => changeTariff(e.target.value)}
+        className="rounded-md border border-gray-300 px-1.5 py-1 text-xs bg-white disabled:opacity-50"
+      >
+        {TARIFFS.map((t) => (
+          <option key={t} value={t}>{t}</option>
+        ))}
+      </select>
       <button
         onClick={toggleBlock}
         disabled={busy}
