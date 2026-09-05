@@ -161,7 +161,7 @@ export default async function CompanyPage({ params }: { params: { slug: string }
           <h2 className="text-lg font-semibold mb-4">{dict.tours}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {company.tours.map((tour) => (
-              <div key={tour.id} className="rounded-lg border border-gray-200 p-4">
+              <div key={tour.id} id={`tour-${tour.id}`} className="scroll-mt-20 rounded-lg border border-gray-200 p-4">
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="font-semibold">{tour.title}</h3>
                   <span className="whitespace-nowrap font-semibold text-brand-700">

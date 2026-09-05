@@ -4,6 +4,7 @@ import type { Prisma } from "@prisma/client";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/dictionary";
 import { localizedRegions, localizedCategories, localizedLanguages } from "@/lib/i18n/constant-labels";
+import { AiTourSearch } from "./AiTourSearch";
 
 const TARIFF_ORDER: Record<string, number> = { PRO: 0, STANDARD: 1, BASIC: 2 };
 
@@ -68,6 +69,8 @@ export default async function SearchPage({
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <h1 className="text-2xl font-bold mb-6">{dict.title}</h1>
+
+      <AiTourSearch dict={dict} locale={locale} />
 
       <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
         <form className="space-y-6 rounded-xl border border-gray-200 bg-white p-5 h-fit">

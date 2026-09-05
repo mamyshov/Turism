@@ -40,6 +40,15 @@ export type Dictionary = {
     all: string;
     found: string;
     empty: string;
+    aiTitle: string;
+    aiSubtitle: string;
+    aiPlaceholder: string;
+    aiButton: string;
+    aiLoading: string;
+    aiResultsTitle: string;
+    aiEmpty: string;
+    aiError: string;
+    aiUnavailable: string;
   };
   company: {
     verified: string;
@@ -131,6 +140,15 @@ const ru: Dictionary = {
     all: "Все",
     found: "Найдено",
     empty: "По вашему запросу ничего не найдено. Попробуйте изменить фильтры.",
+    aiTitle: "🤖 AI-подбор тура",
+    aiSubtitle: "Опишите словами, что вы хотите — Claude подберёт подходящие туры.",
+    aiPlaceholder: "Например: треккинг на 5 дней, не очень сложный, ночёвки в юртах",
+    aiButton: "Подобрать с помощью AI",
+    aiLoading: "Подбираем варианты…",
+    aiResultsTitle: "Результаты AI-подбора",
+    aiEmpty: "Подходящих туров не нашлось. Попробуйте описать иначе.",
+    aiError: "Не удалось выполнить AI-подбор. Попробуйте позже.",
+    aiUnavailable: "AI-подбор временно недоступен.",
   },
   company: {
     verified: "Проверено",
@@ -230,6 +248,15 @@ const ky: Dictionary = {
     all: "Баары",
     found: "Табылды",
     empty: "Суранычыңыз боюнча эч нерсе табылган жок. Чыпкаларды өзгөртүп көрүңүз.",
+    aiTitle: "🤖 AI менен тур тандоо",
+    aiSubtitle: "Каалаган нерсеңизди сөз менен жазыңыз — Claude ылайыктуу турларды тандайт.",
+    aiPlaceholder: "Мисалы: 5 күндүк трекинг, өтө оор эмес, боз үйдө түнөө менен",
+    aiButton: "AI менен тандоо",
+    aiLoading: "Варианттар издөө…",
+    aiResultsTitle: "AI тандоосунун жыйынтыгы",
+    aiEmpty: "Ылайыктуу турлар табылган жок. Башкача сүрөттөп көрүңүз.",
+    aiError: "AI тандоону аткарууга болбоду. Кийинчерээк аракет кылыңыз.",
+    aiUnavailable: "AI менен тандоо убактылуу жеткиликсиз.",
   },
   company: {
     verified: "Текшерилген",
@@ -329,6 +356,15 @@ const en: Dictionary = {
     all: "All",
     found: "Found",
     empty: "No results for your search. Try adjusting the filters.",
+    aiTitle: "🤖 AI tour finder",
+    aiSubtitle: "Describe what you're looking for — Claude will suggest matching tours.",
+    aiPlaceholder: "e.g. a 5-day trek, not too difficult, staying in yurts",
+    aiButton: "Find with AI",
+    aiLoading: "Finding matches…",
+    aiResultsTitle: "AI-matched tours",
+    aiEmpty: "No good matches found. Try describing it differently.",
+    aiError: "AI search failed. Please try again later.",
+    aiUnavailable: "AI search is temporarily unavailable.",
   },
   company: {
     verified: "Verified",
