@@ -97,6 +97,15 @@ export type Dictionary = {
   };
   about: { title: string; body1: string; body2: string };
   contacts: { title: string };
+  reels: {
+    navLabel: string;
+    title: string;
+    subtitle: string;
+    empty: string;
+    viewProfile: string;
+    muted: string;
+    tapToUnmute: string;
+  };
 };
 
 const ru: Dictionary = {
@@ -205,6 +214,15 @@ const ru: Dictionary = {
       "Мы верифицируем каждую турфирму и гида перед публикацией профиля, чтобы турист мог доверять информации в каталоге.",
   },
   contacts: { title: "Контакты" },
+  reels: {
+    navLabel: "🎬 Reels",
+    title: "Короткие видео",
+    subtitle: "Смахивайте вверх, чтобы посмотреть ещё",
+    empty: "Пока нет роликов. Загляните позже!",
+    viewProfile: "Профиль турфирмы",
+    muted: "Без звука — нажмите, чтобы включить",
+    tapToUnmute: "🔇 Нажмите для звука",
+  },
 };
 
 const ky: Dictionary = {
@@ -313,6 +331,15 @@ const ky: Dictionary = {
       "Биз ар бир турфирманы жана гидди профиль жарыяланганга чейин текшеребиз, ошондуктан турист каталогдогу маалыматка ишене алат.",
   },
   contacts: { title: "Байланыш" },
+  reels: {
+    navLabel: "🎬 Reels",
+    title: "Кыска видеолор",
+    subtitle: "Дагы көрүү үчүн жогору сүрүңүз",
+    empty: "Азырынча видео жок. Кийинчерээк кайра келиңиз!",
+    viewProfile: "Турфирманын профили",
+    muted: "Үнсүз — күйгүзүү үчүн басыңыз",
+    tapToUnmute: "🔇 Үн үчүн басыңыз",
+  },
 };
 
 const en: Dictionary = {
@@ -421,6 +448,15 @@ const en: Dictionary = {
       "We verify every tour operator and guide before their profile goes live, so tourists can trust what they see in the catalog.",
   },
   contacts: { title: "Contacts" },
+  reels: {
+    navLabel: "🎬 Reels",
+    title: "Short videos",
+    subtitle: "Swipe up to see more",
+    empty: "No videos yet. Check back soon!",
+    viewProfile: "View operator profile",
+    muted: "Muted — tap to unmute",
+    tapToUnmute: "🔇 Tap for sound",
+  },
 };
 
 const dictionaries: Record<Locale, Dictionary> = { ru, ky, en };

@@ -6,7 +6,15 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/locales";
 
-export function Navbar({ locale, dict }: { locale: Locale; dict: Dictionary["nav"] }) {
+export function Navbar({
+  locale,
+  dict,
+  reelsLabel,
+}: {
+  locale: Locale;
+  dict: Dictionary["nav"];
+  reelsLabel: string;
+}) {
   const { data: session, status } = useSession();
 
   return (
@@ -19,6 +27,7 @@ export function Navbar({ locale, dict }: { locale: Locale; dict: Dictionary["nav
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
           <Link href="/search" className="hover:text-brand-700">{dict.catalog}</Link>
+          <Link href="/reels" className="hover:text-brand-700">{reelsLabel}</Link>
           <Link href="/about" className="hover:text-brand-700">{dict.about}</Link>
           <Link href="/contacts" className="hover:text-brand-700">{dict.contacts}</Link>
         </nav>

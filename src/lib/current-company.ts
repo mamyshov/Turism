@@ -21,6 +21,7 @@ export async function requireCurrentCompany() {
       tours: { orderBy: { createdAt: "desc" } },
       videos: true,
       pdfGuides: true,
+      reels: { orderBy: { createdAt: "desc" }, include: { _count: { select: { likes: true } } } },
     },
   });
 

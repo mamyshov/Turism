@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang={locale}>
       <body className="min-h-screen flex flex-col">
         <Providers>
-          <Navbar locale={locale} dict={dict.nav} />
+          <Navbar locale={locale} dict={dict.nav} reelsLabel={dict.reels.navLabel} />
           <main className="flex-1">{children}</main>
           <Footer tagline={dict.footer.tagline} nav={dict.nav} />
         </Providers>

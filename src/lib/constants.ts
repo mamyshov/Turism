@@ -82,6 +82,14 @@ export const ALLOWED_VERIFICATION_TYPES = [
   "image/png",
 ];
 export const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/quicktime"];
+
+// Reels ("half a social network" short-video feed): open to every tariff on
+// purpose — it's a discovery/growth feature for the whole platform, not a
+// paid perk like the video guides above. Kept small since these are meant
+// to be short clips, not full video guides.
+export const MAX_REEL_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
+export const MAX_REELS_PER_COMPANY = 20;
+export const MAX_REEL_CAPTION_LENGTH = 200;
 export const ALLOWED_PDF_TYPES = ["application/pdf"];
 
 // Per tariff table (раздел 5 ТЗ): видео и PDF-гиды доступны со «Стандарт».

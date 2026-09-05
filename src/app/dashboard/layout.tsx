@@ -4,6 +4,7 @@ import { requireCurrentCompany } from "@/lib/current-company";
 const NAV = [
   { href: "/dashboard/profile", label: "Профиль" },
   { href: "/dashboard/media", label: "Фото и медиа" },
+  { href: "/dashboard/reels", label: "🎬 Reels" },
   { href: "/dashboard/tours", label: "Туры" },
   { href: "/dashboard/stats", label: "Статистика" },
   { href: "/dashboard/billing", label: "Тариф" },

@@ -68,6 +68,7 @@ model Company {
   tours       Tour[]
   reviews     Review[]
   dailyViews  DailyView[]
+  reels       Reel[]
 
   @@index([region])
   @@index([verificationStatus])
@@ -142,4 +143,35 @@ model Review {
   rating      Int // 1-5
   text        String?
   createdAt   DateTime @default(now())
+}
+
+/// "Half a social network": a TikTok/Reels-style short video fed by
+/// tour companies (not gated by tariff — this is a discovery/growth
+/// feature, unlike the longer "video guides" in the Video model above).
+/// No tourist accounts exist, so engagement is anonymous — see ReelLike.
+model Reel {
+  id        String   @id @default(cuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  url       String
+  caption   String?
+  createdAt DateTime @default(now())
+
+  likes ReelLike[]
+
+  @@index([companyId])
+}
+
+/// One like per (reel, anonymous visitor) — visitorId is a random id
+/// stored in a long-lived cookie (src/lib/visitor.ts), not a user
+/// account. Good enough to stop naive re-click spam without building a
+/// tourist auth system.
+model ReelLike {
+  id        String   @id @default(cuid())
+  reelId    String
+  reel      Reel     @relation(fields: [reelId], references: [id], onDelete: Cascade)
+  visitorId String
+  createdAt DateTime @default(now())
+
+  @@unique([reelId, visitorId])
 }
