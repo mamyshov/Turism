@@ -7,7 +7,7 @@ import { Home, Search, Clapperboard, Heart, User } from "lucide-react";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 
 // Hidden where it would collide with another fixed bar or a task-focused layout.
-const HIDDEN_PREFIXES = ["/company/", "/dashboard", "/admin", "/login", "/register"];
+const HIDDEN_PREFIXES = ["/company/", "/tour/", "/dashboard", "/admin", "/login", "/register"];
 
 export function MobileBottomNav({ dict, reelsLabel }: { dict: Dictionary["nav"]; reelsLabel: string }) {
   const pathname = usePathname() ?? "/";

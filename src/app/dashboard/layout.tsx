@@ -4,12 +4,14 @@ import { getDictionary } from "@/lib/i18n/dictionary";
 import { Sidebar, type SidebarItem } from "@/components/layout/Sidebar";
 import { SidebarLogout } from "@/components/layout/SidebarLogout";
 import { Badge } from "@/components/ui/Badge";
+import { ShareButton } from "@/components/ui/ShareButton";
 import { Clock, XCircle, CheckCircle2, Ban } from "lucide-react";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const company = await requireCurrentCompany();
   const locale = getLocale();
-  const dict = getDictionary(locale).dashboard;
+  const fullDict = getDictionary(locale);
+  const dict = fullDict.dashboard;
 
   const NAV: SidebarItem[] = [
     { href: "/dashboard", label: dict.nav.home, icon: "home" },
@@ -43,7 +45,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
           )}
           {company.isBlocked && <p className="mt-1 text-sm text-danger">{dict.blockedNotice}</p>}
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {company.verificationStatus === "APPROVED" && !company.isBlocked && (
+            <ShareButton
+              path={`/company/${company.slug}`}
+              title={company.name}
+              dict={fullDict.share}
+              label={fullDict.share.myProfile}
+            />
+          )}
           {company.isBlocked && (
             <Badge tone="danger" icon={<Ban className="size-3.5" aria-hidden />}>
               {dict.status.blocked}

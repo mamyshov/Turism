@@ -13,6 +13,28 @@ export type Dictionary = {
     admin: string;
     logout: string;
   };
+  tour: {
+    back: string;
+    about: string;
+    price: string;
+    duration: string;
+    group: string;
+    operator: string;
+    contactHint: string;
+    otherTours: string;
+    viewProfile: string;
+    noPhotos: string;
+  };
+  share: {
+    button: string;
+    copyLink: string;
+    copied: string;
+    whatsapp: string;
+    telegram: string;
+    more: string;
+    myProfile: string;
+    close: string;
+  };
   favorites: {
     title: string;
     subtitle: string;
@@ -286,6 +308,28 @@ const ru: Dictionary = {
     account: "Кабинет",
     admin: "Админ",
     logout: "Выйти",
+  },
+  tour: {
+    back: "К профилю турфирмы",
+    about: "О туре",
+    price: "Цена",
+    duration: "Длительность",
+    group: "Группа",
+    operator: "Организатор",
+    contactHint: "Свяжитесь с турфирмой, чтобы уточнить даты и забронировать тур.",
+    otherTours: "Другие туры компании",
+    viewProfile: "Профиль турфирмы",
+    noPhotos: "Фото пока нет",
+  },
+  share: {
+    button: "Поделиться",
+    copyLink: "Копировать ссылку",
+    copied: "Ссылка скопирована",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
+    more: "Другие приложения",
+    myProfile: "Поделиться профилем",
+    close: "Закрыть",
   },
   favorites: {
     title: "Избранное",
@@ -586,6 +630,28 @@ const ky: Dictionary = {
     admin: "Админ",
     logout: "Чыгуу",
   },
+  tour: {
+    back: "Турфирманын профилине",
+    about: "Тур жөнүндө",
+    price: "Баасы",
+    duration: "Узактыгы",
+    group: "Топ",
+    operator: "Уюштуруучу",
+    contactHint: "Даталарды тактоо жана турду брондоо үчүн турфирма менен байланышыңыз.",
+    otherTours: "Компаниянын башка турлары",
+    viewProfile: "Турфирманын профили",
+    noPhotos: "Азырынча сүрөт жок",
+  },
+  share: {
+    button: "Бөлүшүү",
+    copyLink: "Шилтемени көчүрүү",
+    copied: "Шилтеме көчүрүлдү",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
+    more: "Башка колдонмолор",
+    myProfile: "Профилди бөлүшүү",
+    close: "Жабуу",
+  },
   favorites: {
     title: "Тандалгандар",
     subtitle: "Бул түзмөктө сакталган турфирмалар.",
@@ -884,6 +950,28 @@ const en: Dictionary = {
     account: "Dashboard",
     admin: "Admin",
     logout: "Log out",
+  },
+  tour: {
+    back: "Back to operator",
+    about: "About this tour",
+    price: "Price",
+    duration: "Duration",
+    group: "Group",
+    operator: "Operator",
+    contactHint: "Contact the operator to confirm dates and book this tour.",
+    otherTours: "More tours from this operator",
+    viewProfile: "View operator profile",
+    noPhotos: "No photos yet",
+  },
+  share: {
+    button: "Share",
+    copyLink: "Copy link",
+    copied: "Link copied",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
+    more: "More apps",
+    myProfile: "Share my profile",
+    close: "Close",
   },
   favorites: {
     title: "Favorites",

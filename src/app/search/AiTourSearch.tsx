@@ -97,7 +97,7 @@ export function AiTourSearch({ dict, locale }: { dict: Dictionary["search"]; loc
               {results.map((r) => (
                 <Link
                   key={r.tourId}
-                  href={`/company/${r.companySlug}#tour-${r.tourId}`}
+                  href={`/tour/${r.tourId}`}
                   className="focus-ring block rounded-md border border-line bg-white p-3 transition-colors hover:border-brand-400 hover:shadow-card"
                 >
                   <div className="flex items-start justify-between gap-2">

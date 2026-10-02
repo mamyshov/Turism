@@ -5,6 +5,7 @@ import { fromJsonArray } from "@/lib/json";
 import { computeRating } from "@/lib/rating";
 import { trackCompanyView } from "@/lib/track-view";
 import Image from "next/image";
+import Link from "next/link";
 import { sitePhoto } from "@/lib/site-photos";
 import { MapPin, ShieldCheck, FileText, Download } from "lucide-react";
 import { PhotoGallery } from "@/components/PhotoGallery";
@@ -14,6 +15,7 @@ import { ContactButtons, MobileContactBar } from "@/components/company/ContactBu
 import { ReviewCard } from "@/components/reviews/ReviewCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
+import { ShareButton } from "@/components/ui/ShareButton";
 import { ReviewForm } from "./ReviewForm";
 import { getLocale } from "@/lib/i18n/get-locale";
 import type { Locale } from "@/lib/i18n/locales";
@@ -77,7 +79,11 @@ export default async function CompanyPage({ params }: { params: { slug: string }
       {company.tours.map((tour) => (
         <div key={tour.id} id={`tour-${tour.id}`} className="scroll-mt-24 rounded-card border border-line bg-white p-5 shadow-card">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-balance-wrap font-semibold text-ink">{tour.title}</h3>
+            <h3 className="text-balance-wrap font-semibold text-ink">
+              <Link href={`/tour/${tour.id}`} className="focus-ring rounded hover:text-brand-700 hover:underline">
+                {tour.title}
+              </Link>
+            </h3>
             <span className="whitespace-nowrap font-semibold text-brand-700">
               {tour.price.toLocaleString(intlLocale)} {CURRENCY[locale]}
             </span>
@@ -232,13 +238,15 @@ export default async function CompanyPage({ params }: { params: { slug: string }
               </div>
             </div>
           </div>
-          <div className="hidden md:block">
+          <div className="hidden items-center gap-2 md:flex">
             <ContactButtons company={company} dict={dict} />
+            <ShareButton path={`/company/${company.slug}`} title={company.name} dict={fullDict.share} />
           </div>
         </div>
 
-        <div className="mt-4 md:hidden">
+        <div className="mt-4 flex flex-wrap items-center gap-2 md:hidden">
           <ContactButtons company={company} dict={dict} secondaryOnly />
+          <ShareButton path={`/company/${company.slug}`} title={company.name} dict={fullDict.share} />
         </div>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px]">
