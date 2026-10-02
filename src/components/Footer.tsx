@@ -10,7 +10,7 @@ export function Footer({
   nav: Pick<Dictionary["nav"], "about" | "contacts" | "catalog">;
 }) {
   return (
-    <footer className="border-t border-line bg-white">
+    <footer className="mt-12 border-t border-line bg-white sm:mt-16">
       <div className="mx-auto max-w-container px-4 py-10 sm:px-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-2 text-ink">
