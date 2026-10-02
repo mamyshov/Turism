@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { sitePhoto } from "@/lib/site-photos";
 import { prisma } from "@/lib/prisma";
 import { CompanyCard } from "@/components/CompanyCard";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -55,13 +57,20 @@ export default async function HomePage() {
   const searchDict = getDictionary(locale).search;
   const regions = localizedRegions(locale);
   const categories = localizedCategories(locale);
+  const heroPhoto = sitePhoto("hero");
 
   return (
     <div>
       {/* Hero — abstract brand-colored mountain silhouette in place of licensed photography */}
       <section className="relative overflow-hidden bg-gradient-to-b from-brand-900 via-brand-800 to-brand-600 text-white">
+        {heroPhoto && (
+          <>
+            <Image src={heroPhoto} alt="" fill priority sizes="100vw" className="object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
+          </>
+        )}
         <svg
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 w-full text-brand-900/40"
+          className={`pointer-events-none absolute inset-x-0 bottom-0 h-1/2 w-full ${heroPhoto ? "hidden" : ""} text-brand-900/40`}
           viewBox="0 0 1200 300"
           preserveAspectRatio="none"
           aria-hidden
@@ -88,7 +97,7 @@ export default async function HomePage() {
               id="home-region"
               name="region"
               defaultValue=""
-              className="focus-ring rounded-md border-0 bg-transparent px-3 py-2.5 text-sm text-ink sm:w-40"
+              className="focus-ring rounded-md border-0 bg-transparent px-3 py-2.5 text-sm text-ink sm:w-36 sm:flex-none"
             >
               <option value="">{searchDict.region}</option>
               {regions.map((r) => (
@@ -104,7 +113,7 @@ export default async function HomePage() {
               id="home-category"
               name="category"
               defaultValue=""
-              className="focus-ring rounded-md border-0 bg-transparent px-3 py-2.5 text-sm text-ink sm:w-40"
+              className="focus-ring rounded-md border-0 bg-transparent px-3 py-2.5 text-sm text-ink sm:w-36 sm:flex-none"
             >
               <option value="">{searchDict.category}</option>
               {categories.map((c) => (
@@ -116,7 +125,7 @@ export default async function HomePage() {
             <input
               name="q"
               placeholder={dict.searchPlaceholder}
-              className="focus-ring flex-1 rounded-md border-0 px-3 py-2.5 text-sm text-ink placeholder:text-ink-muted"
+              className="focus-ring min-w-0 flex-1 rounded-md border-0 px-3 py-2.5 text-sm text-ink placeholder:text-ink-muted"
             />
             <button className="inline-flex items-center justify-center gap-1.5 rounded-md bg-brand-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-700 active:bg-brand-800">
               <SearchIcon className="size-4" aria-hidden />

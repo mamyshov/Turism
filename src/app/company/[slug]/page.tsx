@@ -5,6 +5,7 @@ import { fromJsonArray } from "@/lib/json";
 import { computeRating } from "@/lib/rating";
 import { trackCompanyView } from "@/lib/track-view";
 import Image from "next/image";
+import { sitePhoto } from "@/lib/site-photos";
 import { MapPin, ShieldCheck, FileText, Download } from "lucide-react";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { StarRating } from "@/components/StarRating";
@@ -67,7 +68,7 @@ export default async function CompanyPage({ params }: { params: { slug: string }
   const languages = fromJsonArray(company.languages);
   const categories = fromJsonArray(company.categories);
   const rating = computeRating(company.reviews);
-  const cover = company.photos[0]?.url;
+  const cover = company.photos[0]?.url ?? sitePhoto("cover");
 
   const toursPanel = company.tours.length === 0 ? (
     <EmptyState title={dict.noTours} />
