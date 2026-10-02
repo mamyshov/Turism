@@ -31,7 +31,7 @@ export function Navbar({
   return (
     <header className="sticky top-0 z-30 h-16 border-b border-line bg-white">
       <div className="mx-auto flex h-full max-w-container items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2 text-lg font-bold text-brand-700">
+        <Link href="/" className="focus-ring -ml-2 flex items-center gap-2 rounded-md p-2 text-lg font-bold text-brand-700">
           <Mountain className="size-6 text-brand-600" aria-hidden />
           <span className="hidden sm:inline">KyrgyzTour Hub</span>
         </Link>

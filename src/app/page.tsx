@@ -166,7 +166,7 @@ export default async function HomePage() {
 
         <div className="mt-14 flex items-center justify-between">
           <h2 className="text-xl font-bold text-ink">{dict.topCompaniesTitle}</h2>
-          <Link href="/search" className="focus-ring inline-flex items-center gap-1 text-sm font-medium text-brand-700">
+          <Link href="/search" className="focus-ring inline-flex items-center gap-1 rounded py-2 text-sm font-medium text-brand-700">
             {dict.viewAll}
           </Link>
         </div>

@@ -85,7 +85,7 @@ export function Sidebar({
     <>
       {/* Mobile top bar trigger */}
       <div className="mb-4 flex items-center justify-between lg:hidden">
-        <span className="font-semibold text-ink">{title}</span>
+        <span className="font-semibold text-ink">{items.find((i) => isActive(i.href))?.label ?? title}</span>
         <button
           onClick={() => setMobileOpen(true)}
           aria-label="Открыть меню"

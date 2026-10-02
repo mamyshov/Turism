@@ -32,6 +32,7 @@ export const Input = forwardRef<HTMLInputElement, FieldWrap & InputHTMLAttribute
           ref={ref}
           id={fieldId}
           className={`${fieldBase} ${borderClasses(!!error)}`}
+          required={required}
           aria-invalid={!!error}
           aria-describedby={error ? `${fieldId}-error` : hint ? `${fieldId}-hint` : undefined}
           {...props}
@@ -53,6 +54,7 @@ export const Textarea = forwardRef<
         ref={ref}
         id={fieldId}
         className={`${fieldBase} ${borderClasses(!!error)} min-h-[96px] resize-y`}
+        required={required}
         aria-invalid={!!error}
         {...props}
       />
@@ -72,6 +74,7 @@ export const Select = forwardRef<
         ref={ref}
         id={fieldId}
         className={`${fieldBase} ${borderClasses(!!error)}`}
+        required={required}
         aria-invalid={!!error}
         {...props}
       >

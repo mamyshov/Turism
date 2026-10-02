@@ -21,7 +21,8 @@ export default async function AdminCompaniesPage() {
       <h2 className="text-xl font-semibold text-ink">Турфирмы</h2>
       <p className="mb-6 text-sm text-ink-secondary">Всего: {companies.length}</p>
 
-      <div className="overflow-x-auto rounded-card border border-line bg-white shadow-card">
+      {/* Desktop/tablet: table */}
+      <div className="hidden overflow-x-auto rounded-card border border-line bg-white shadow-card md:block">
         <table className="w-full min-w-[820px] text-sm">
           <thead className="bg-gray-50 text-left text-xs uppercase tracking-wide text-ink-muted">
             <tr>
@@ -66,6 +67,44 @@ export default async function AdminCompaniesPage() {
             })}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile: one card per company */}
+      <div className="space-y-3 md:hidden">
+        {companies.map((c) => {
+          const status = STATUS[c.verificationStatus];
+          return (
+            <div
+              key={c.id}
+              className={`rounded-card border bg-white p-4 shadow-card ${c.isBlocked ? "border-red-200 bg-red-50/40" : "border-line"}`}
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                {c.verificationStatus === "APPROVED" ? (
+                  <Link
+                    href={`/company/${c.slug}`}
+                    target="_blank"
+                    className="focus-ring text-balance-wrap inline-block rounded py-1.5 font-semibold text-brand-700"
+                  >
+                    {c.name}
+                  </Link>
+                ) : (
+                  <span className="text-balance-wrap font-semibold text-ink">{c.name}</span>
+                )}
+                <Badge tone={status.tone}>{status.label}</Badge>
+                {c.isBlocked && <Badge tone="danger">Заблокирована</Badge>}
+              </div>
+              <dl className="mt-2 space-y-0.5 text-sm text-ink-secondary">
+                <div className="break-all">{c.user.email}</div>
+                <div>
+                  {labelFor(REGIONS, c.region) || "—"} · {c.viewCount} просм.
+                </div>
+              </dl>
+              <div className="mt-3 border-t border-line pt-3">
+                <AdminCompanyActions companyId={c.id} isBlocked={c.isBlocked} tariff={c.tariff} />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

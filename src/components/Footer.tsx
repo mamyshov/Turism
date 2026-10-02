@@ -17,14 +17,14 @@ export function Footer({
             <Mountain className="size-5 text-brand-600" aria-hidden />
             <span className="font-semibold">KyrgyzTour Hub</span>
           </div>
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink-secondary">
-            <Link href="/search" className="focus-ring rounded hover:text-brand-700">
+          <nav className="flex flex-wrap gap-x-6 gap-y-0 text-sm text-ink-secondary">
+            <Link href="/search" className="focus-ring inline-block rounded py-2 hover:text-brand-700">
               {nav.catalog}
             </Link>
-            <Link href="/about" className="focus-ring rounded hover:text-brand-700">
+            <Link href="/about" className="focus-ring inline-block rounded py-2 hover:text-brand-700">
               {nav.about}
             </Link>
-            <Link href="/contacts" className="focus-ring rounded hover:text-brand-700">
+            <Link href="/contacts" className="focus-ring inline-block rounded py-2 hover:text-brand-700">
               {nav.contacts}
             </Link>
           </nav>

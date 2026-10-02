@@ -45,7 +45,7 @@ export default async function AdminReelsPage() {
                     <Link
                       href={`/company/${reel.company.slug}`}
                       target="_blank"
-                      className="focus-ring text-balance-wrap rounded text-sm font-semibold text-ink hover:text-brand-700"
+                      className="focus-ring text-balance-wrap inline-block rounded py-1.5 text-sm font-semibold text-ink hover:text-brand-700"
                     >
                       {reel.company.name}
                     </Link>

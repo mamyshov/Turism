@@ -48,7 +48,7 @@ export function AnalyticsChart({
               key={p}
               onClick={() => setPeriod(p)}
               aria-pressed={period === p}
-              className={`focus-ring rounded px-2.5 py-1 transition-colors ${
+              className={`focus-ring rounded px-3 py-2 transition-colors ${
                 period === p ? "bg-white text-brand-700 shadow-sm" : "text-ink-secondary hover:text-ink"
               }`}
             >

@@ -123,7 +123,7 @@ export function ProfileForm({
         </Button>
         <Link
           href={`/company/${companySlug}`}
-          className="focus-ring inline-flex items-center gap-1.5 rounded text-sm font-medium text-brand-700 hover:underline"
+          className="focus-ring inline-flex items-center gap-1.5 rounded py-2 text-sm font-medium text-brand-700 hover:underline"
           target="_blank"
         >
           <ExternalLink className="size-4" aria-hidden />

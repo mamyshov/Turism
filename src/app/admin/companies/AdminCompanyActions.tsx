@@ -51,13 +51,13 @@ export function AdminCompanyActions({
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       <select
         aria-label="Тариф"
         value={tariff}
         disabled={busy}
         onChange={(e) => changeTariff(e.target.value)}
-        className="focus-ring h-8 rounded-md border border-line bg-white px-2 text-xs disabled:opacity-50"
+        className="focus-ring h-9 rounded-md border border-line bg-white px-2 text-xs disabled:opacity-50"
       >
         {TARIFFS.map((t) => (
           <option key={t} value={t}>{t}</option>

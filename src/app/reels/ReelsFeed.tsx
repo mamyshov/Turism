@@ -139,7 +139,7 @@ function ReelSlide({
       <button
         onClick={onToggleMute}
         aria-label={muted ? dict.tapToUnmute : dict.muted}
-        className="focus-ring absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs text-white hover:bg-black/70"
+        className="focus-ring absolute right-3 top-3 inline-flex min-h-10 items-center gap-1.5 rounded-full bg-black/50 px-3.5 py-2 text-xs text-white hover:bg-black/70"
       >
         {muted ? <VolumeX className="size-4" aria-hidden /> : <Volume2 className="size-4" aria-hidden />}
         {muted && dict.tapToUnmute}
@@ -147,13 +147,13 @@ function ReelSlide({
 
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-black/80 to-transparent p-4 pb-8 text-white">
         <div className="min-w-0">
-          <Link href={`/company/${reel.companySlug}`} className="focus-ring rounded font-semibold hover:underline">
+          <Link href={`/company/${reel.companySlug}`} className="focus-ring inline-block rounded py-1.5 font-semibold hover:underline">
             {reel.companyName}
           </Link>
           {reel.caption && <p className="mt-1 text-sm text-white/90 line-clamp-3">{reel.caption}</p>}
           <Link
             href={`/company/${reel.companySlug}`}
-            className="focus-ring mt-2 inline-block rounded-full border border-white/60 px-3 py-1.5 text-xs hover:bg-white/10"
+            className="focus-ring mt-2 inline-block rounded-full border border-white/60 px-4 py-2.5 text-xs hover:bg-white/10"
           >
             {dict.viewProfile}
           </Link>

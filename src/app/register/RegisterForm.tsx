@@ -42,9 +42,21 @@ export function RegisterForm({ dict }: { dict: Dictionary["auth"] }) {
   // contains every field; only the visible slice changes.
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.currentTarget;
+    const stepOf = (el: Element) => Number(el.closest("[data-step]")?.getAttribute("data-step"));
+    const fields = Array.from(form.querySelectorAll<HTMLInputElement>("input, select, textarea")).filter((el) =>
+      el.closest("[data-step]")
+    );
     if (step < steps.length - 1) {
-      if (e.currentTarget.checkValidity()) setStep((s) => s + 1);
-      else e.currentTarget.reportValidity();
+      const invalid = fields.find((f) => stepOf(f) === step && !f.checkValidity());
+      if (invalid) invalid.reportValidity();
+      else setStep((s) => s + 1);
+      return;
+    }
+    const bad = fields.find((f) => !f.checkValidity());
+    if (bad) {
+      setStep(stepOf(bad));
+      setTimeout(() => bad.reportValidity(), 0);
       return;
     }
     setError(null);
@@ -112,9 +124,9 @@ export function RegisterForm({ dict }: { dict: Dictionary["auth"] }) {
         onSubmit={handleSubmit}
         className="mt-6 space-y-5 rounded-card border border-line bg-white p-5 shadow-card sm:p-6"
         encType="multipart/form-data"
-        noValidate={false}
+        noValidate
       >
-        <div className={step === 0 ? "space-y-5" : "hidden"}>
+        <div data-step="0" className={step === 0 ? "space-y-5" : "hidden"}>
           <Input label={dict.name} name="name" value={values.name} onChange={set("name")} required />
           <div>
             <p className="mb-1.5 text-sm font-medium text-ink">{dict.type}</p>
@@ -141,7 +153,7 @@ export function RegisterForm({ dict }: { dict: Dictionary["auth"] }) {
           </div>
         </div>
 
-        <div className={step === 1 ? "space-y-5" : "hidden"}>
+        <div data-step="1" className={step === 1 ? "space-y-5" : "hidden"}>
           <Input label={dict.email} name="email" type="email" value={values.email} onChange={set("email")} required />
           <Input
             label={dict.phone}
@@ -171,7 +183,7 @@ export function RegisterForm({ dict }: { dict: Dictionary["auth"] }) {
           />
         </div>
 
-        <div className={step === 2 ? "space-y-2" : "hidden"}>
+        <div data-step="2" className={step === 2 ? "space-y-2" : "hidden"}>
           <label htmlFor="verificationDocument" className="block text-sm font-medium text-ink">
             {dict.verificationDoc}
           </label>
@@ -213,16 +225,16 @@ export function RegisterForm({ dict }: { dict: Dictionary["auth"] }) {
           </p>
         )}
 
-        <div className="flex gap-2">
+        <div className="flex flex-col-reverse gap-2 sm:flex-row">
           {step > 0 && (
-            <Button type="button" variant="outline" size="lg" onClick={() => setStep((s) => s - 1)}>
+            <Button type="button" variant="outline" size="lg" className="sm:flex-none" onClick={() => setStep((s) => s - 1)}>
               {dict.back}
             </Button>
           )}
           <Button
             type="submit"
             size="lg"
-            className="flex-1"
+            className="min-w-0 sm:flex-1"
             loading={submitting}
             icon={step === steps.length - 1 ? <Check className="size-4" /> : undefined}
           >

@@ -62,7 +62,7 @@ export default async function DashboardHome() {
         <div className="mb-3 flex items-center justify-between">
           <h3 className="font-semibold text-ink">{dict.home.recentReviewsTitle}</h3>
           {recentReviews.length > 0 && (
-            <Link href="/dashboard/reviews" className="focus-ring rounded text-sm font-medium text-brand-700">
+            <Link href="/dashboard/reviews" className="focus-ring rounded py-2 text-sm font-medium text-brand-700">
               {dict.home.viewAll}
             </Link>
           )}
