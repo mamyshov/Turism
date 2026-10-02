@@ -2,10 +2,19 @@
 
 import { useRef, useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 
 type Reel = { id: string; url: string; caption: string | null; likeCount: number };
 
-export function ReelManager({ initialReels, limit }: { initialReels: Reel[]; limit: number }) {
+export function ReelManager({
+  initialReels,
+  limit,
+  dict,
+}: {
+  initialReels: Reel[];
+  limit: number;
+  dict: Dictionary["dashboard"]["reels"];
+}) {
   const router = useRouter();
   const [reels, setReels] = useState(initialReels);
   const [caption, setCaption] = useState("");
@@ -18,7 +27,7 @@ export function ReelManager({ initialReels, limit }: { initialReels: Reel[]; lim
     e.preventDefault();
     setError(null);
     if (!file) {
-      setError("Выберите видеофайл.");
+      setError(dict.selectFileError);
       return;
     }
 
@@ -32,7 +41,7 @@ export function ReelManager({ initialReels, limit }: { initialReels: Reel[]; lim
     setUploading(false);
 
     if (!res.ok) {
-      setError(data.error ?? "Не удалось загрузить видео.");
+      setError(data.error ?? dict.selectFileError);
       return;
     }
 
@@ -63,7 +72,7 @@ export function ReelManager({ initialReels, limit }: { initialReels: Reel[]; lim
           <input
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
-            placeholder="Подпись (необязательно)"
+            placeholder={dict.captionPlaceholder}
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
           />
           {error && <p className="text-sm text-red-600">{error}</p>}
@@ -72,13 +81,11 @@ export function ReelManager({ initialReels, limit }: { initialReels: Reel[]; lim
             disabled={uploading}
             className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
           >
-            {uploading ? "Загрузка…" : "Добавить ролик"}
+            {uploading ? dict.uploading : dict.add}
           </button>
         </form>
       ) : (
-        <p className="text-sm text-gray-500">
-          Достигнут лимит роликов ({limit}). Удалите старый, чтобы добавить новый.
-        </p>
+        <p className="text-sm text-gray-500">{dict.limitReached.replace("{limit}", String(limit))}</p>
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -98,7 +105,7 @@ export function ReelManager({ initialReels, limit }: { initialReels: Reel[]; lim
           </div>
         ))}
       </div>
-      {reels.length === 0 && <p className="text-sm text-gray-500">Пока нет роликов.</p>}
+      {reels.length === 0 && <p className="text-sm text-gray-500">{dict.empty}</p>}
     </div>
   );
 }

@@ -2,10 +2,17 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 
 type PdfItem = { id: string; title: string; url: string };
 
-export function PdfManager({ initialPdfs }: { initialPdfs: PdfItem[] }) {
+export function PdfManager({
+  initialPdfs,
+  dict,
+}: {
+  initialPdfs: PdfItem[];
+  dict: Dictionary["dashboard"]["media"];
+}) {
   const router = useRouter();
   const [pdfs, setPdfs] = useState(initialPdfs);
   const [title, setTitle] = useState("");
@@ -18,7 +25,7 @@ export function PdfManager({ initialPdfs }: { initialPdfs: PdfItem[] }) {
     setError(null);
 
     if (!title.trim() || !file) {
-      setError("Укажите название и выберите файл.");
+      setError(dict.selectFileError);
       return;
     }
 
@@ -32,7 +39,7 @@ export function PdfManager({ initialPdfs }: { initialPdfs: PdfItem[] }) {
     setSaving(false);
 
     if (!res.ok) {
-      setError(data.error ?? "Не удалось загрузить файл.");
+      setError(data.error ?? dict.selectFileError);
       return;
     }
     setPdfs((prev) => [...prev, data.pdf]);
@@ -55,7 +62,7 @@ export function PdfManager({ initialPdfs }: { initialPdfs: PdfItem[] }) {
             📄 {pdf.title}
           </a>
           <button onClick={() => handleDelete(pdf.id)} className="text-red-600 hover:underline">
-            Удалить
+            {dict.delete}
           </button>
         </div>
       ))}
@@ -64,7 +71,7 @@ export function PdfManager({ initialPdfs }: { initialPdfs: PdfItem[] }) {
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Название гида, например «Маршрут на Ала-Кёль»"
+          placeholder={dict.pdfTitlePlaceholder}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
         />
         <input
@@ -81,7 +88,7 @@ export function PdfManager({ initialPdfs }: { initialPdfs: PdfItem[] }) {
           disabled={saving}
           className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
         >
-          {saving ? "Загрузка…" : "Добавить PDF"}
+          {saving ? dict.uploading : dict.addPdf}
         </button>
       </form>
     </div>

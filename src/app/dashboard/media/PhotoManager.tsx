@@ -3,15 +3,18 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 
 type Photo = { id: string; url: string };
 
 export function PhotoManager({
   initialPhotos,
   limit,
+  dict,
 }: {
   initialPhotos: Photo[];
   limit: number;
+  dict: Dictionary["dashboard"]["media"];
 }) {
   const router = useRouter();
   const [photos, setPhotos] = useState(initialPhotos);
@@ -30,7 +33,7 @@ export function PhotoManager({
     setUploading(false);
 
     if (!res.ok) {
-      setError(data.error ?? "Не удалось загрузить фото.");
+      setError(data.error ?? dict.selectFileError);
       return;
     }
     setPhotos((prev) => [...prev, data.photo]);
@@ -64,7 +67,7 @@ export function PhotoManager({
             disabled={uploading}
             className="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-sm text-gray-400 hover:border-brand-500 hover:text-brand-600 disabled:opacity-50"
           >
-            {uploading ? "Загрузка…" : "+ Добавить"}
+            {uploading ? dict.uploading : dict.add}
           </button>
         )}
       </div>
@@ -82,7 +85,9 @@ export function PhotoManager({
       />
 
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <p className="text-xs text-gray-400">{photos.length} / {limit} фото загружено</p>
+      <p className="text-xs text-gray-400">
+        {dict.photosCount.replace("{count}", String(photos.length)).replace("{limit}", String(limit))}
+      </p>
     </div>
   );
 }

@@ -1,24 +1,34 @@
 import Link from "next/link";
 import { requireCurrentCompany } from "@/lib/current-company";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getDictionary } from "@/lib/i18n/dictionary";
 
-const NAV = [
-  { href: "/dashboard/profile", label: "Профиль" },
-  { href: "/dashboard/media", label: "Фото и медиа" },
-  { href: "/dashboard/reels", label: "🎬 Reels" },
-  { href: "/dashboard/tours", label: "Туры" },
-  { href: "/dashboard/stats", label: "Статистика" },
-  { href: "/dashboard/billing", label: "Тариф" },
-];
-
-const STATUS_LABEL: Record<string, { text: string; className: string }> = {
-  PENDING: { text: "На модерации", className: "bg-amber-100 text-amber-800" },
-  APPROVED: { text: "Одобрено", className: "bg-green-100 text-green-800" },
-  REJECTED: { text: "Отклонено", className: "bg-red-100 text-red-800" },
+const STATUS_CLASS: Record<string, string> = {
+  PENDING: "bg-amber-100 text-amber-800",
+  APPROVED: "bg-green-100 text-green-800",
+  REJECTED: "bg-red-100 text-red-800",
 };
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const company = await requireCurrentCompany();
-  const status = STATUS_LABEL[company.verificationStatus];
+  const locale = getLocale();
+  const dict = getDictionary(locale).dashboard;
+
+  const NAV = [
+    { href: "/dashboard/profile", label: dict.nav.profile },
+    { href: "/dashboard/media", label: dict.nav.media },
+    { href: "/dashboard/reels", label: dict.nav.reels },
+    { href: "/dashboard/tours", label: dict.nav.tours },
+    { href: "/dashboard/stats", label: dict.nav.stats },
+    { href: "/dashboard/billing", label: dict.nav.billing },
+  ];
+
+  const statusText =
+    company.verificationStatus === "PENDING"
+      ? dict.status.pending
+      : company.verificationStatus === "APPROVED"
+      ? dict.status.approved
+      : dict.status.rejected;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -28,24 +38,22 @@ export default async function DashboardLayout({ children }: { children: React.Re
           {company.verificationStatus !== "APPROVED" && (
             <p className="mt-1 text-sm text-gray-500">
               {company.verificationStatus === "PENDING"
-                ? "Ваш профиль ещё не виден в каталоге, пока администратор не одобрит заявку."
-                : `Заявка отклонена${company.verificationComment ? ": " + company.verificationComment : "."}`}
+                ? dict.pendingNotice
+                : `${dict.rejectedNotice}${company.verificationComment ? ": " + company.verificationComment : "."}`}
             </p>
           )}
           {company.isBlocked && (
-            <p className="mt-1 text-sm text-red-600">
-              Профиль заблокирован администратором и скрыт из каталога.
-            </p>
+            <p className="mt-1 text-sm text-red-600">{dict.blockedNotice}</p>
           )}
         </div>
         <div className="flex gap-2">
           {company.isBlocked && (
             <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">
-              Заблокирован
+              {dict.status.blocked}
             </span>
           )}
-          <span className={`rounded-full px-3 py-1 text-xs font-medium ${status.className}`}>
-            {status.text}
+          <span className={`rounded-full px-3 py-1 text-xs font-medium ${STATUS_CLASS[company.verificationStatus]}`}>
+            {statusText}
           </span>
         </div>
       </div>

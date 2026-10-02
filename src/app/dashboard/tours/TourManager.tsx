@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 
 type Tour = {
   id: string;
@@ -26,7 +27,13 @@ const EMPTY_FORM = {
   excluded: "",
 };
 
-export function TourManager({ initialTours }: { initialTours: Tour[] }) {
+export function TourManager({
+  initialTours,
+  dict,
+}: {
+  initialTours: Tour[];
+  dict: Dictionary["dashboard"]["tours"];
+}) {
   const router = useRouter();
   const [tours, setTours] = useState(initialTours);
   const [form, setForm] = useState(EMPTY_FORM);
@@ -48,7 +55,7 @@ export function TourManager({ initialTours }: { initialTours: Tour[] }) {
     setSaving(false);
 
     if (!res.ok) {
-      setError(data.error ?? "Не удалось добавить тур.");
+      setError(data.error ?? dict.errorGeneric);
       return;
     }
 
@@ -73,16 +80,16 @@ export function TourManager({ initialTours }: { initialTours: Tour[] }) {
               <h3 className="font-semibold">{tour.title}</h3>
               <p className="text-sm text-gray-500">
                 {[
-                  tour.durationDays ? `${tour.durationDays} дн.` : null,
-                  tour.durationHours ? `${tour.durationHours} ч.` : null,
-                  tour.maxPeople ? `до ${tour.maxPeople} чел.` : null,
+                  tour.durationDays ? `${tour.durationDays} ${dict.daysSuffix}` : null,
+                  tour.durationHours ? `${tour.durationHours} ${dict.hoursSuffix}` : null,
+                  tour.maxPeople ? dict.maxPeopleSuffix.replace("{n}", String(tour.maxPeople)) : null,
                 ].filter(Boolean).join(" · ")}
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="font-semibold text-brand-700">{tour.price.toLocaleString("ru-RU")} сом</span>
+              <span className="font-semibold text-brand-700">{tour.price.toLocaleString()} сом</span>
               <button onClick={() => handleDelete(tour.id)} className="text-sm text-red-600 hover:underline">
-                Удалить
+                {dict.delete}
               </button>
             </div>
           </div>
@@ -91,9 +98,9 @@ export function TourManager({ initialTours }: { initialTours: Tour[] }) {
 
       {showForm ? (
         <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-gray-200 p-4">
-          <Field label="Название тура" value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
+          <Field label={dict.titleLabel} value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Описание</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{dict.descriptionLabel}</label>
             <textarea
               rows={3}
               value={form.description}
@@ -102,22 +109,22 @@ export function TourManager({ initialTours }: { initialTours: Tour[] }) {
             />
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <Field label="Дней" type="number" value={form.durationDays} onChange={(v) => setForm({ ...form, durationDays: v })} />
-            <Field label="Часов" type="number" value={form.durationHours} onChange={(v) => setForm({ ...form, durationHours: v })} />
-            <Field label="Цена, сом" type="number" value={form.price} onChange={(v) => setForm({ ...form, price: v })} required />
-            <Field label="Макс. чел." type="number" value={form.maxPeople} onChange={(v) => setForm({ ...form, maxPeople: v })} />
+            <Field label={dict.daysLabel} type="number" value={form.durationDays} onChange={(v) => setForm({ ...form, durationDays: v })} />
+            <Field label={dict.hoursLabel} type="number" value={form.durationHours} onChange={(v) => setForm({ ...form, durationHours: v })} />
+            <Field label={dict.priceLabel} type="number" value={form.price} onChange={(v) => setForm({ ...form, price: v })} required />
+            <Field label={dict.maxPeopleLabel} type="number" value={form.maxPeople} onChange={(v) => setForm({ ...form, maxPeople: v })} />
           </div>
-          <Field label="Включено" value={form.included} onChange={(v) => setForm({ ...form, included: v })} placeholder="Транспорт, питание, гид…" />
-          <Field label="Не включено" value={form.excluded} onChange={(v) => setForm({ ...form, excluded: v })} placeholder="Авиабилеты, страховка…" />
+          <Field label={dict.includedLabel} value={form.included} onChange={(v) => setForm({ ...form, included: v })} placeholder={dict.includedPlaceholder} />
+          <Field label={dict.excludedLabel} value={form.excluded} onChange={(v) => setForm({ ...form, excluded: v })} placeholder={dict.excludedPlaceholder} />
 
           {error && <p className="text-sm text-red-600">{error}</p>}
 
           <div className="flex gap-3">
             <button type="submit" disabled={saving} className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50">
-              {saving ? "Сохранение…" : "Добавить тур"}
+              {saving ? dict.saving : dict.addButton}
             </button>
             <button type="button" onClick={() => setShowForm(false)} className="rounded-md border border-gray-300 px-4 py-2 text-sm">
-              Отмена
+              {dict.cancel}
             </button>
           </div>
         </form>
@@ -126,7 +133,7 @@ export function TourManager({ initialTours }: { initialTours: Tour[] }) {
           onClick={() => setShowForm(true)}
           className="w-full rounded-lg border-2 border-dashed border-gray-300 py-3 text-sm text-gray-500 hover:border-brand-500 hover:text-brand-600"
         >
-          + Добавить тур
+          {dict.add}
         </button>
       )}
     </div>

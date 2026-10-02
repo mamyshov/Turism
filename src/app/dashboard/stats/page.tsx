@@ -1,5 +1,7 @@
 import { requireCurrentCompany } from "@/lib/current-company";
 import { prisma } from "@/lib/prisma";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getDictionary } from "@/lib/i18n/dictionary";
 import { ViewsChart } from "./ViewsChart";
 
 const DAYS = 30;
@@ -17,6 +19,7 @@ function lastNDates(n: number): string[] {
 
 export default async function StatsPage() {
   const company = await requireCurrentCompany();
+  const dict = getDictionary(getLocale()).dashboard.stats;
 
   const since = new Date();
   since.setUTCDate(since.getUTCDate() - (DAYS - 1));
@@ -32,21 +35,21 @@ export default async function StatsPage() {
 
   return (
     <div className="max-w-2xl">
-      <h2 className="text-lg font-semibold mb-1">Статистика</h2>
-      <p className="mb-6 text-sm text-gray-500">Просмотры профиля за последние {DAYS} дней.</p>
+      <h2 className="text-lg font-semibold mb-1">{dict.title}</h2>
+      <p className="mb-6 text-sm text-gray-500">{dict.subtitle.replace("{days}", String(DAYS))}</p>
 
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="rounded-lg border border-gray-200 p-6">
-          <p className="text-sm text-gray-500">Всего просмотров</p>
+          <p className="text-sm text-gray-500">{dict.totalViews}</p>
           <p className="text-3xl font-bold text-brand-700">{company.viewCount}</p>
         </div>
         <div className="rounded-lg border border-gray-200 p-6">
-          <p className="text-sm text-gray-500">За {DAYS} дней</p>
+          <p className="text-sm text-gray-500">{dict.periodViews.replace("{days}", String(DAYS))}</p>
           <p className="text-3xl font-bold text-brand-700">{periodTotal}</p>
         </div>
       </div>
 
-      <ViewsChart series={series} />
+      <ViewsChart series={series} viewsSuffix={dict.viewsSuffix} />
     </div>
   );
 }

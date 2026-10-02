@@ -1,20 +1,22 @@
 import { requireCurrentCompany } from "@/lib/current-company";
 import { MAX_REELS_PER_COMPANY } from "@/lib/constants";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getDictionary } from "@/lib/i18n/dictionary";
 import { ReelManager } from "./ReelManager";
 
 export default async function DashboardReelsPage() {
   const company = await requireCurrentCompany();
+  const dict = getDictionary(getLocale()).dashboard.reels;
 
   return (
     <div className="max-w-2xl">
-      <h2 className="text-lg font-semibold mb-1">Короткие видео (Reels)</h2>
+      <h2 className="text-lg font-semibold mb-1">{dict.title}</h2>
       <p className="mb-6 text-sm text-gray-500">
-        Короткие вертикальные ролики попадают в общую публичную ленту{" "}
+        {dict.subtitlePrefix}{" "}
         <a href="/reels" target="_blank" className="text-brand-700 hover:underline">
           /reels
         </a>{" "}
-        — доступно на любом тарифе, до {MAX_REELS_PER_COMPANY} роликов, MP4/WEBM/MOV,
-        до 50 МБ каждый. Это способ привлечь туристов, а не платная функция.
+        {dict.subtitleSuffix.replace("{limit}", String(MAX_REELS_PER_COMPANY))}
       </p>
       <ReelManager
         initialReels={company.reels.map((r) => ({
@@ -24,6 +26,7 @@ export default async function DashboardReelsPage() {
           likeCount: r._count.likes,
         }))}
         limit={MAX_REELS_PER_COMPANY}
+        dict={dict}
       />
     </div>
   );

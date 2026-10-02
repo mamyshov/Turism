@@ -106,6 +106,115 @@ export type Dictionary = {
     muted: string;
     tapToUnmute: string;
   };
+  dashboard: {
+    nav: {
+      profile: string;
+      media: string;
+      reels: string;
+      tours: string;
+      stats: string;
+      billing: string;
+    };
+    status: {
+      pending: string;
+      approved: string;
+      rejected: string;
+      blocked: string;
+    };
+    pendingNotice: string;
+    rejectedNotice: string;
+    blockedNotice: string;
+    profile: {
+      description: string;
+      descriptionPlaceholder: string;
+      region: string;
+      regionNotSet: string;
+      languages: string;
+      categories: string;
+      phone: string;
+      whatsapp: string;
+      instagram: string;
+      email: string;
+      save: string;
+      saving: string;
+      saved: string;
+      errorGeneric: string;
+      preview: string;
+    };
+    media: {
+      photosTitle: string;
+      photosSubtitle: string;
+      videosTitle: string;
+      videosSubtitle: string;
+      pdfTitle: string;
+      pdfSubtitle: string;
+      upsellPrefix: string;
+      changeTariff: string;
+      add: string;
+      uploading: string;
+      photosCount: string;
+      videoEmbedOption: string;
+      videoUploadOption: string;
+      videoTitlePlaceholder: string;
+      videoUrlPlaceholder: string;
+      videoLinkLabel: string;
+      videoFileLabel: string;
+      addVideo: string;
+      selectFileError: string;
+      delete: string;
+      pdfTitlePlaceholder: string;
+      addPdf: string;
+    };
+    reels: {
+      title: string;
+      subtitlePrefix: string;
+      subtitleSuffix: string;
+      captionPlaceholder: string;
+      add: string;
+      uploading: string;
+      limitReached: string;
+      empty: string;
+      delete: string;
+      selectFileError: string;
+    };
+    tours: {
+      title: string;
+      subtitle: string;
+      titleLabel: string;
+      descriptionLabel: string;
+      daysLabel: string;
+      hoursLabel: string;
+      priceLabel: string;
+      maxPeopleLabel: string;
+      includedLabel: string;
+      includedPlaceholder: string;
+      excludedLabel: string;
+      excludedPlaceholder: string;
+      add: string;
+      saving: string;
+      cancel: string;
+      addButton: string;
+      delete: string;
+      daysSuffix: string;
+      hoursSuffix: string;
+      maxPeopleSuffix: string;
+      errorGeneric: string;
+    };
+    stats: {
+      title: string;
+      subtitle: string;
+      totalViews: string;
+      periodViews: string;
+      viewsSuffix: string;
+    };
+    billing: {
+      title: string;
+      subtitle: string;
+      free: string;
+      currentTariff: string;
+      tariffs: Record<string, { label: string; period: string; features: string[] }>;
+    };
+  };
 };
 
 const ru: Dictionary = {
@@ -222,6 +331,131 @@ const ru: Dictionary = {
     viewProfile: "Профиль турфирмы",
     muted: "Без звука — нажмите, чтобы включить",
     tapToUnmute: "🔇 Нажмите для звука",
+  },
+  dashboard: {
+    nav: {
+      profile: "Профиль",
+      media: "Фото и медиа",
+      reels: "🎬 Reels",
+      tours: "Туры",
+      stats: "Статистика",
+      billing: "Тариф",
+    },
+    status: {
+      pending: "На модерации",
+      approved: "Одобрено",
+      rejected: "Отклонено",
+      blocked: "Заблокирован",
+    },
+    pendingNotice: "Ваш профиль ещё не виден в каталоге, пока администратор не одобрит заявку.",
+    rejectedNotice: "Заявка отклонена",
+    blockedNotice: "Профиль заблокирован администратором и скрыт из каталога.",
+    profile: {
+      description: "Описание компании",
+      descriptionPlaceholder: "Расскажите туристам о вашей компании, опыте и турах…",
+      region: "Регион работы",
+      regionNotSet: "Не указано",
+      languages: "Языки гида",
+      categories: "Типы туров",
+      phone: "Телефон",
+      whatsapp: "WhatsApp",
+      instagram: "Instagram",
+      email: "Email для связи",
+      save: "Сохранить",
+      saving: "Сохранение…",
+      saved: "Сохранено ✓",
+      errorGeneric: "Не удалось сохранить.",
+      preview: "Предпросмотр публичной страницы →",
+    },
+    media: {
+      photosTitle: "Фотографии",
+      photosSubtitle: "До {limit} фото на вашем тарифе ({tariff}), формат JPG/PNG/WEBP, до 5 МБ каждое.",
+      videosTitle: "Видео-гиды",
+      videosSubtitle: "Ссылка на YouTube/Vimeo или файл (MP4/WEBM/MOV, до 200 МБ).",
+      pdfTitle: "PDF-гиды",
+      pdfSubtitle: "Маршруты и гиды в формате PDF, до 20 МБ.",
+      upsellPrefix: "Загрузка {feature} доступна с тарифа «Стандарт».",
+      changeTariff: "Сменить тариф →",
+      add: "+ Добавить",
+      uploading: "Загрузка…",
+      photosCount: "{count} / {limit} фото загружено",
+      videoEmbedOption: "Ссылка YouTube/Vimeo",
+      videoUploadOption: "Загрузить файл",
+      videoTitlePlaceholder: "Название (необязательно)",
+      videoUrlPlaceholder: "https://www.youtube.com/watch?v=…",
+      videoLinkLabel: "Видео (ссылка)",
+      videoFileLabel: "Видео (файл)",
+      addVideo: "Добавить видео",
+      selectFileError: "Выберите файл.",
+      delete: "Удалить",
+      pdfTitlePlaceholder: "Название гида, например «Маршрут на Ала-Кёль»",
+      addPdf: "Добавить PDF",
+    },
+    reels: {
+      title: "Короткие видео (Reels)",
+      subtitlePrefix: "Короткие вертикальные ролики попадают в общую публичную ленту",
+      subtitleSuffix: "— доступно на любом тарифе, до {limit} роликов, MP4/WEBM/MOV, до 50 МБ каждый. Это способ привлечь туристов, а не платная функция.",
+      captionPlaceholder: "Подпись (необязательно)",
+      add: "Добавить ролик",
+      uploading: "Загрузка…",
+      limitReached: "Достигнут лимит роликов ({limit}). Удалите старый, чтобы добавить новый.",
+      empty: "Пока нет роликов.",
+      delete: "Удалить",
+      selectFileError: "Выберите видеофайл.",
+    },
+    tours: {
+      title: "Туры",
+      subtitle: "Добавьте туры, которые предлагает ваша компания. Они появятся на публичной странице профиля.",
+      titleLabel: "Название тура",
+      descriptionLabel: "Описание",
+      daysLabel: "Дней",
+      hoursLabel: "Часов",
+      priceLabel: "Цена, сом",
+      maxPeopleLabel: "Макс. чел.",
+      includedLabel: "Включено",
+      includedPlaceholder: "Транспорт, питание, гид…",
+      excludedLabel: "Не включено",
+      excludedPlaceholder: "Авиабилеты, страховка…",
+      add: "+ Добавить тур",
+      saving: "Сохранение…",
+      cancel: "Отмена",
+      addButton: "Добавить тур",
+      delete: "Удалить",
+      daysSuffix: "дн.",
+      hoursSuffix: "ч.",
+      maxPeopleSuffix: "до {n} чел.",
+      errorGeneric: "Не удалось добавить тур.",
+    },
+    stats: {
+      title: "Статистика",
+      subtitle: "Просмотры профиля за последние {days} дней.",
+      totalViews: "Всего просмотров",
+      periodViews: "За {days} дней",
+      viewsSuffix: "просм.",
+    },
+    billing: {
+      title: "Тариф",
+      subtitle: "Онлайн-оплата появится позже. Пока смена тарифа выполняется администратором вручную — напишите нам на info@kyrgyztourhub.kg.",
+      free: "Бесплатно",
+      currentTariff: "Текущий тариф",
+      tariffs: {
+        BASIC: {
+          label: "Базовый",
+          period: "первые 6 мес. бесплатно",
+          features: ["Профиль компании", "До 5 фото", "Без видео и PDF-гидов"],
+        },
+        STANDARD: {
+          label: "Стандарт",
+          period: "сом/мес",
+          features: ["До 15 фото", "Видео-гиды", "PDF-гиды"],
+        },
+        PRO: {
+          label: "Про",
+          period: "сом/мес",
+          features: ["Приоритет в поиске", "Бейдж «Проверено»", "Аналитика просмотров"],
+        },
+      },
+    },
   },
 };
 
@@ -340,6 +574,131 @@ const ky: Dictionary = {
     muted: "Үнсүз — күйгүзүү үчүн басыңыз",
     tapToUnmute: "🔇 Үн үчүн басыңыз",
   },
+  dashboard: {
+    nav: {
+      profile: "Профиль",
+      media: "Сүрөт жана медиа",
+      reels: "🎬 Reels",
+      tours: "Турлар",
+      stats: "Статистика",
+      billing: "Тариф",
+    },
+    status: {
+      pending: "Текшерүүдө",
+      approved: "Бекитилди",
+      rejected: "Четке кагылды",
+      blocked: "Бөгөттөлгөн",
+    },
+    pendingNotice: "Администратор арызды бекиткенге чейин профилиңиз каталогдо көрүнбөйт.",
+    rejectedNotice: "Арыз четке кагылды",
+    blockedNotice: "Профиль администратор тарабынан бөгөттөлдү жана каталогдон жашырылды.",
+    profile: {
+      description: "Компания жөнүндө сүрөттөмө",
+      descriptionPlaceholder: "Туристтерге компанияңыз, тажрыйбаңыз жана турларыңыз жөнүндө айтып бериңиз…",
+      region: "Иштөө аймагы",
+      regionNotSet: "Көрсөтүлгөн жок",
+      languages: "Гиддин тилдери",
+      categories: "Тур түрлөрү",
+      phone: "Телефон",
+      whatsapp: "WhatsApp",
+      instagram: "Instagram",
+      email: "Байланыш үчүн email",
+      save: "Сактоо",
+      saving: "Сакталууда…",
+      saved: "Сакталды ✓",
+      errorGeneric: "Сактоого болбоду.",
+      preview: "Коомдук баракты алдын ала көрүү →",
+    },
+    media: {
+      photosTitle: "Сүрөттөр",
+      photosSubtitle: "Тарифиңизде ({tariff}) {limit} сүрөткө чейин, JPG/PNG/WEBP форматы, ар бирин 5 МБга чейин.",
+      videosTitle: "Видео гиддер",
+      videosSubtitle: "YouTube/Vimeo шилтемеси же файл (MP4/WEBM/MOV, 200 МБга чейин).",
+      pdfTitle: "PDF гиддер",
+      pdfSubtitle: "PDF форматындагы маршруттар жана гиддер, 20 МБга чейин.",
+      upsellPrefix: "{feature} жүктөө «Стандарт» тарифинен тартып жеткиликтүү.",
+      changeTariff: "Тарифти өзгөртүү →",
+      add: "+ Кошуу",
+      uploading: "Жүктөлүүдө…",
+      photosCount: "{count} / {limit} сүрөт жүктөлдү",
+      videoEmbedOption: "YouTube/Vimeo шилтемеси",
+      videoUploadOption: "Файл жүктөө",
+      videoTitlePlaceholder: "Аталышы (милдеттүү эмес)",
+      videoUrlPlaceholder: "https://www.youtube.com/watch?v=…",
+      videoLinkLabel: "Видео (шилтеме)",
+      videoFileLabel: "Видео (файл)",
+      addVideo: "Видео кошуу",
+      selectFileError: "Файлды тандаңыз.",
+      delete: "Өчүрүү",
+      pdfTitlePlaceholder: "Гиддин аталышы, мисалы «Ала-Көл маршруту»",
+      addPdf: "PDF кошуу",
+    },
+    reels: {
+      title: "Кыска видеолор (Reels)",
+      subtitlePrefix: "Кыска тик видеолор жалпы коомдук лентага чыгат",
+      subtitleSuffix: "— бардык тарифтерде жеткиликтүү, {limit} видеого чейин, MP4/WEBM/MOV, ар бирин 50 МБга чейин. Бул туристтерди тартуу ыкмасы, акылуу функция эмес.",
+      captionPlaceholder: "Жазуу (милдеттүү эмес)",
+      add: "Видео кошуу",
+      uploading: "Жүктөлүүдө…",
+      limitReached: "Видео лимитине жеттиңиз ({limit}). Жаңысын кошуу үчүн эскисин өчүрүңүз.",
+      empty: "Азырынча видео жок.",
+      delete: "Өчүрүү",
+      selectFileError: "Видео файлды тандаңыз.",
+    },
+    tours: {
+      title: "Турлар",
+      subtitle: "Компанияңыз сунуштаган турларды кошуңуз. Алар коомдук профиль бетинде көрүнөт.",
+      titleLabel: "Тур аталышы",
+      descriptionLabel: "Сүрөттөмө",
+      daysLabel: "Күн",
+      hoursLabel: "Саат",
+      priceLabel: "Баасы, сом",
+      maxPeopleLabel: "Макс. адам",
+      includedLabel: "Кирет",
+      includedPlaceholder: "Транспорт, тамак, гид…",
+      excludedLabel: "Кирбейт",
+      excludedPlaceholder: "Авиабилеттер, камсыздандыруу…",
+      add: "+ Тур кошуу",
+      saving: "Сакталууда…",
+      cancel: "Жокко чыгаруу",
+      addButton: "Тур кошуу",
+      delete: "Өчүрүү",
+      daysSuffix: "күн",
+      hoursSuffix: "саат",
+      maxPeopleSuffix: "{n} адамга чейин",
+      errorGeneric: "Турду кошууга болбоду.",
+    },
+    stats: {
+      title: "Статистика",
+      subtitle: "Акыркы {days} күндүн ичинде профилдин көрүүлөрү.",
+      totalViews: "Бардык көрүүлөр",
+      periodViews: "{days} күн ичинде",
+      viewsSuffix: "көрүү",
+    },
+    billing: {
+      title: "Тариф",
+      subtitle: "Онлайн төлөм кийинчерээк кошулат. Азырынча тарифти администратор кол менен өзгөртөт — бизге info@kyrgyztourhub.kg дарегине жазыңыз.",
+      free: "Акысыз",
+      currentTariff: "Учурдагы тариф",
+      tariffs: {
+        BASIC: {
+          label: "Базалык",
+          period: "алгачкы 6 ай акысыз",
+          features: ["Компания профили", "5 сүрөткө чейин", "Видео жана PDF гиддерсиз"],
+        },
+        STANDARD: {
+          label: "Стандарт",
+          period: "сом/ай",
+          features: ["15 сүрөткө чейин", "Видео гиддер", "PDF гиддер"],
+        },
+        PRO: {
+          label: "Про",
+          period: "сом/ай",
+          features: ["Издөөдө артыкчылык", "«Текшерилген» белгиси", "Көрүүлөрдүн аналитикасы"],
+        },
+      },
+    },
+  },
 };
 
 const en: Dictionary = {
@@ -456,6 +815,131 @@ const en: Dictionary = {
     viewProfile: "View operator profile",
     muted: "Muted — tap to unmute",
     tapToUnmute: "🔇 Tap for sound",
+  },
+  dashboard: {
+    nav: {
+      profile: "Profile",
+      media: "Photos & media",
+      reels: "🎬 Reels",
+      tours: "Tours",
+      stats: "Stats",
+      billing: "Plan",
+    },
+    status: {
+      pending: "Under review",
+      approved: "Approved",
+      rejected: "Rejected",
+      blocked: "Blocked",
+    },
+    pendingNotice: "Your profile isn't visible in the catalog yet until an admin approves your application.",
+    rejectedNotice: "Application rejected",
+    blockedNotice: "Your profile has been blocked by an admin and hidden from the catalog.",
+    profile: {
+      description: "Company description",
+      descriptionPlaceholder: "Tell tourists about your company, experience, and tours…",
+      region: "Operating region",
+      regionNotSet: "Not set",
+      languages: "Guide languages",
+      categories: "Tour types",
+      phone: "Phone",
+      whatsapp: "WhatsApp",
+      instagram: "Instagram",
+      email: "Contact email",
+      save: "Save",
+      saving: "Saving…",
+      saved: "Saved ✓",
+      errorGeneric: "Couldn't save.",
+      preview: "Preview public page →",
+    },
+    media: {
+      photosTitle: "Photos",
+      photosSubtitle: "Up to {limit} photos on your plan ({tariff}), JPG/PNG/WEBP, up to 5 MB each.",
+      videosTitle: "Video guides",
+      videosSubtitle: "A YouTube/Vimeo link or a file (MP4/WEBM/MOV, up to 200 MB).",
+      pdfTitle: "PDF guides",
+      pdfSubtitle: "Routes and guides as PDF, up to 20 MB.",
+      upsellPrefix: "Uploading {feature} is available on the Standard plan.",
+      changeTariff: "Change plan →",
+      add: "+ Add",
+      uploading: "Uploading…",
+      photosCount: "{count} / {limit} photos uploaded",
+      videoEmbedOption: "YouTube/Vimeo link",
+      videoUploadOption: "Upload a file",
+      videoTitlePlaceholder: "Title (optional)",
+      videoUrlPlaceholder: "https://www.youtube.com/watch?v=…",
+      videoLinkLabel: "Video (link)",
+      videoFileLabel: "Video (file)",
+      addVideo: "Add video",
+      selectFileError: "Choose a file.",
+      delete: "Delete",
+      pdfTitlePlaceholder: "Guide title, e.g. \"Ala-Kul route\"",
+      addPdf: "Add PDF",
+    },
+    reels: {
+      title: "Short videos (Reels)",
+      subtitlePrefix: "Short vertical clips appear in the public",
+      subtitleSuffix: "feed — available on every plan, up to {limit} clips, MP4/WEBM/MOV, up to 50 MB each. This is a discovery feature, not a paid one.",
+      captionPlaceholder: "Caption (optional)",
+      add: "Add clip",
+      uploading: "Uploading…",
+      limitReached: "You've reached the clip limit ({limit}). Delete an old one to add a new one.",
+      empty: "No clips yet.",
+      delete: "Delete",
+      selectFileError: "Choose a video file.",
+    },
+    tours: {
+      title: "Tours",
+      subtitle: "Add the tours your company offers. They'll show up on your public profile page.",
+      titleLabel: "Tour title",
+      descriptionLabel: "Description",
+      daysLabel: "Days",
+      hoursLabel: "Hours",
+      priceLabel: "Price, KGS",
+      maxPeopleLabel: "Max people",
+      includedLabel: "Included",
+      includedPlaceholder: "Transport, meals, guide…",
+      excludedLabel: "Not included",
+      excludedPlaceholder: "Flights, insurance…",
+      add: "+ Add tour",
+      saving: "Saving…",
+      cancel: "Cancel",
+      addButton: "Add tour",
+      delete: "Delete",
+      daysSuffix: "days",
+      hoursSuffix: "hrs",
+      maxPeopleSuffix: "up to {n} people",
+      errorGeneric: "Couldn't add the tour.",
+    },
+    stats: {
+      title: "Stats",
+      subtitle: "Profile views over the last {days} days.",
+      totalViews: "Total views",
+      periodViews: "Last {days} days",
+      viewsSuffix: "views",
+    },
+    billing: {
+      title: "Plan",
+      subtitle: "Online payment is coming later. For now, plan changes are made manually by an admin — email us at info@kyrgyztourhub.kg.",
+      free: "Free",
+      currentTariff: "Current plan",
+      tariffs: {
+        BASIC: {
+          label: "Basic",
+          period: "free for the first 6 months",
+          features: ["Company profile", "Up to 5 photos", "No video or PDF guides"],
+        },
+        STANDARD: {
+          label: "Standard",
+          period: "KGS/month",
+          features: ["Up to 15 photos", "Video guides", "PDF guides"],
+        },
+        PRO: {
+          label: "Pro",
+          period: "KGS/month",
+          features: ["Priority in search", "\"Verified\" badge", "View analytics"],
+        },
+      },
+    },
   },
 };
 

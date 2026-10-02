@@ -2,10 +2,17 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 
 type VideoItem = { id: string; type: string; url: string; title: string | null };
 
-export function VideoManager({ initialVideos }: { initialVideos: VideoItem[] }) {
+export function VideoManager({
+  initialVideos,
+  dict,
+}: {
+  initialVideos: VideoItem[];
+  dict: Dictionary["dashboard"]["media"];
+}) {
   const router = useRouter();
   const [videos, setVideos] = useState(initialVideos);
   const [mode, setMode] = useState<"EMBED" | "UPLOAD">("EMBED");
@@ -29,7 +36,7 @@ export function VideoManager({ initialVideos }: { initialVideos: VideoItem[] }) 
       formData.append("file", file);
     } else {
       setSaving(false);
-      setError("Выберите файл.");
+      setError(dict.selectFileError);
       return;
     }
 
@@ -38,7 +45,7 @@ export function VideoManager({ initialVideos }: { initialVideos: VideoItem[] }) 
     setSaving(false);
 
     if (!res.ok) {
-      setError(data.error ?? "Не удалось добавить видео.");
+      setError(data.error ?? dict.selectFileError);
       return;
     }
     setVideos((prev) => [...prev, data.video]);
@@ -59,11 +66,13 @@ export function VideoManager({ initialVideos }: { initialVideos: VideoItem[] }) 
       {videos.map((video) => (
         <div key={video.id} className="flex items-center justify-between rounded-lg border border-gray-200 p-3 text-sm">
           <div>
-            <span className="font-medium">{video.title || (video.type === "EMBED" ? "Видео (ссылка)" : "Видео (файл)")}</span>
+            <span className="font-medium">
+              {video.title || (video.type === "EMBED" ? dict.videoLinkLabel : dict.videoFileLabel)}
+            </span>
             <p className="truncate text-xs text-gray-400 max-w-xs">{video.url}</p>
           </div>
           <button onClick={() => handleDelete(video.id)} className="text-red-600 hover:underline">
-            Удалить
+            {dict.delete}
           </button>
         </div>
       ))}
@@ -72,18 +81,18 @@ export function VideoManager({ initialVideos }: { initialVideos: VideoItem[] }) 
         <div className="flex gap-4 text-sm">
           <label className="flex items-center gap-1.5">
             <input type="radio" checked={mode === "EMBED"} onChange={() => setMode("EMBED")} />
-            Ссылка YouTube/Vimeo
+            {dict.videoEmbedOption}
           </label>
           <label className="flex items-center gap-1.5">
             <input type="radio" checked={mode === "UPLOAD"} onChange={() => setMode("UPLOAD")} />
-            Загрузить файл
+            {dict.videoUploadOption}
           </label>
         </div>
 
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Название (необязательно)"
+          placeholder={dict.videoTitlePlaceholder}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
         />
 
@@ -91,7 +100,7 @@ export function VideoManager({ initialVideos }: { initialVideos: VideoItem[] }) 
           <input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://www.youtube.com/watch?v=…"
+            placeholder={dict.videoUrlPlaceholder}
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
           />
         ) : (
@@ -110,7 +119,7 @@ export function VideoManager({ initialVideos }: { initialVideos: VideoItem[] }) 
           disabled={saving}
           className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
         >
-          {saving ? "Загрузка…" : "Добавить видео"}
+          {saving ? dict.uploading : dict.addVideo}
         </button>
       </form>
     </div>

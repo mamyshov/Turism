@@ -2,7 +2,7 @@ type Point = { date: string; count: number };
 
 // Plain bars with native title tooltips — no client JS or chart library
 // needed for a simple 30-day sparkline.
-export function ViewsChart({ series }: { series: Point[] }) {
+export function ViewsChart({ series, viewsSuffix }: { series: Point[]; viewsSuffix: string }) {
   const max = Math.max(1, ...series.map((p) => p.count));
 
   return (
@@ -11,7 +11,7 @@ export function ViewsChart({ series }: { series: Point[] }) {
         {series.map((p) => (
           <div
             key={p.date}
-            title={`${formatDate(p.date)}: ${p.count} просм.`}
+            title={`${formatDate(p.date)}: ${p.count} ${viewsSuffix}`}
             className="flex-1 rounded-t bg-brand-500/80 hover:bg-brand-600 transition-colors"
             style={{ height: `${Math.max(2, (p.count / max) * 100)}%` }}
           />

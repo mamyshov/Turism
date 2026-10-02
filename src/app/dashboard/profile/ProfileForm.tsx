@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import Link from "next/link";
-import { REGIONS, LANGUAGES, TOUR_CATEGORIES } from "@/lib/constants";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 
 type ProfileData = {
   description: string;
@@ -15,12 +15,22 @@ type ProfileData = {
   contactEmail: string;
 };
 
+type Option = { key: string; label: string };
+
 export function ProfileForm({
   initial,
   companySlug,
+  dict,
+  regions,
+  languages,
+  categories,
 }: {
   initial: ProfileData;
   companySlug: string;
+  dict: Dictionary["dashboard"]["profile"];
+  regions: Option[];
+  languages: Option[];
+  categories: Option[];
 }) {
   const [data, setData] = useState(initial);
   const [saving, setSaving] = useState(false);
@@ -46,7 +56,7 @@ export function ProfileForm({
     setSaving(false);
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      setError(body.error ?? "Не удалось сохранить.");
+      setError(body.error ?? dict.errorGeneric);
       return;
     }
     setSaved(true);
@@ -56,53 +66,53 @@ export function ProfileForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Описание компании</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{dict.description}</label>
         <textarea
           rows={5}
           value={data.description}
           onChange={(e) => setData({ ...data, description: e.target.value })}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          placeholder="Расскажите туристам о вашей компании, опыте и турах…"
+          placeholder={dict.descriptionPlaceholder}
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Регион работы</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{dict.region}</label>
         <select
           value={data.region}
           onChange={(e) => setData({ ...data, region: e.target.value })}
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white"
         >
-          <option value="">Не указано</option>
-          {REGIONS.map((r) => (
+          <option value="">{dict.regionNotSet}</option>
+          {regions.map((r) => (
             <option key={r.key} value={r.key}>{r.label}</option>
           ))}
         </select>
       </div>
 
       <CheckboxGroup
-        label="Языки гида"
-        options={LANGUAGES}
+        label={dict.languages}
+        options={languages}
         selected={data.languages}
         onChange={(key) => setData({ ...data, languages: toggle(data.languages, key) })}
       />
 
       <CheckboxGroup
-        label="Типы туров"
-        options={TOUR_CATEGORIES}
+        label={dict.categories}
+        options={categories}
         selected={data.categories}
         onChange={(key) => setData({ ...data, categories: toggle(data.categories, key) })}
       />
 
       <div className="grid sm:grid-cols-2 gap-4">
-        <TextField label="Телефон" value={data.phone} onChange={(v) => setData({ ...data, phone: v })} placeholder="+996 700 000 000" />
-        <TextField label="WhatsApp" value={data.whatsapp} onChange={(v) => setData({ ...data, whatsapp: v })} placeholder="996700000000" />
-        <TextField label="Instagram" value={data.instagram} onChange={(v) => setData({ ...data, instagram: v })} placeholder="@yourcompany" />
-        <TextField label="Email для связи" value={data.contactEmail} onChange={(v) => setData({ ...data, contactEmail: v })} type="email" />
+        <TextField label={dict.phone} value={data.phone} onChange={(v) => setData({ ...data, phone: v })} placeholder="+996 700 000 000" />
+        <TextField label={dict.whatsapp} value={data.whatsapp} onChange={(v) => setData({ ...data, whatsapp: v })} placeholder="996700000000" />
+        <TextField label={dict.instagram} value={data.instagram} onChange={(v) => setData({ ...data, instagram: v })} placeholder="@yourcompany" />
+        <TextField label={dict.email} value={data.contactEmail} onChange={(v) => setData({ ...data, contactEmail: v })} type="email" />
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
-      {saved && <p className="text-sm text-green-600">Сохранено ✓</p>}
+      {saved && <p className="text-sm text-green-600">{dict.saved}</p>}
 
       <div className="flex items-center gap-4">
         <button
@@ -110,10 +120,10 @@ export function ProfileForm({
           disabled={saving}
           className="rounded-md bg-brand-600 px-5 py-2.5 font-medium text-white hover:bg-brand-700 disabled:opacity-50"
         >
-          {saving ? "Сохранение…" : "Сохранить"}
+          {saving ? dict.saving : dict.save}
         </button>
         <Link href={`/company/${companySlug}`} className="text-sm text-brand-700 hover:underline" target="_blank">
-          Предпросмотр публичной страницы →
+          {dict.preview}
         </Link>
       </div>
     </form>
@@ -154,7 +164,7 @@ function CheckboxGroup({
   onChange,
 }: {
   label: string;
-  options: readonly { key: string; label: string }[];
+  options: Option[];
   selected: string[];
   onChange: (key: string) => void;
 }) {
