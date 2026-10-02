@@ -12,10 +12,19 @@ const base =
   "focus-ring inline-flex h-10 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium transition-colors";
 const outline = `${base} border border-line bg-white text-ink hover:bg-gray-50 active:bg-gray-100`;
 
-export function ContactButtons({ company, dict }: { company: Contacts; dict: ContactDict }) {
+export function ContactButtons({
+  company,
+  dict,
+  secondaryOnly,
+}: {
+  company: Contacts;
+  dict: ContactDict;
+  /** Mobile: WhatsApp/Call live in the sticky bar, so only show the rest inline. */
+  secondaryOnly?: boolean;
+}) {
   return (
     <div className="flex flex-wrap gap-2">
-      {company.whatsapp && (
+      {company.whatsapp && !secondaryOnly && (
         <a
           href={`https://wa.me/${company.whatsapp.replace(/\D/g, "")}`}
           target="_blank"
@@ -26,7 +35,7 @@ export function ContactButtons({ company, dict }: { company: Contacts; dict: Con
           {dict.whatsapp}
         </a>
       )}
-      {company.phone && (
+      {company.phone && !secondaryOnly && (
         <a href={`tel:${company.phone}`} className={outline}>
           <Phone className="size-4" aria-hidden />
           {dict.call}

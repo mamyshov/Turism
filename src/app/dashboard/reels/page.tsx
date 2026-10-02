@@ -9,11 +9,11 @@ export default async function DashboardReelsPage() {
   const dict = getDictionary(getLocale()).dashboard.reels;
 
   return (
-    <div className="max-w-2xl">
-      <h2 className="text-lg font-semibold mb-1">{dict.title}</h2>
-      <p className="mb-6 text-sm text-gray-500">
+    <div>
+      <h2 className="text-xl font-semibold text-ink">{dict.title}</h2>
+      <p className="mb-6 text-sm text-ink-secondary">
         {dict.subtitlePrefix}{" "}
-        <a href="/reels" target="_blank" className="text-brand-700 hover:underline">
+        <a href="/reels" target="_blank" className="focus-ring rounded text-brand-700 hover:underline">
           /reels
         </a>{" "}
         {dict.subtitleSuffix.replace("{limit}", String(MAX_REELS_PER_COMPANY))}

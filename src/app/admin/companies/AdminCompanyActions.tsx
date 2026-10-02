@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Ban, CircleCheck, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Modal } from "@/components/ui/Modal";
 
 const TARIFFS = ["BASIC", "STANDARD", "PRO"];
 
@@ -16,6 +19,7 @@ export function AdminCompanyActions({
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   async function toggleBlock() {
     setBusy(true);
@@ -40,38 +44,55 @@ export function AdminCompanyActions({
   }
 
   async function handleDelete() {
-    if (!confirm("Удалить турфирму и все её данные безвозвратно?")) return;
     setBusy(true);
     await fetch(`/api/admin/companies/${companyId}`, { method: "DELETE" });
+    setConfirmDelete(false);
     router.refresh();
   }
 
   return (
     <div className="flex items-center gap-2">
       <select
+        aria-label="Тариф"
         value={tariff}
         disabled={busy}
         onChange={(e) => changeTariff(e.target.value)}
-        className="rounded-md border border-gray-300 px-1.5 py-1 text-xs bg-white disabled:opacity-50"
+        className="focus-ring h-8 rounded-md border border-line bg-white px-2 text-xs disabled:opacity-50"
       >
         {TARIFFS.map((t) => (
           <option key={t} value={t}>{t}</option>
         ))}
       </select>
-      <button
-        onClick={toggleBlock}
+      <Button
+        variant="outline"
+        size="sm"
         disabled={busy}
-        className="whitespace-nowrap rounded-md border border-gray-300 px-2.5 py-1 text-xs hover:bg-gray-50 disabled:opacity-50"
+        icon={isBlocked ? <CircleCheck className="size-4" /> : <Ban className="size-4" />}
+        onClick={toggleBlock}
       >
         {isBlocked ? "Разблокировать" : "Заблокировать"}
-      </button>
-      <button
-        onClick={handleDelete}
-        disabled={busy}
-        className="whitespace-nowrap rounded-md border border-red-300 px-2.5 py-1 text-xs text-red-600 hover:bg-red-50 disabled:opacity-50"
+      </Button>
+      <Button variant="ghost" size="sm" aria-label="Удалить" disabled={busy} onClick={() => setConfirmDelete(true)}>
+        <Trash2 className="size-4 text-danger" />
+      </Button>
+
+      <Modal
+        open={confirmDelete}
+        onClose={() => setConfirmDelete(false)}
+        title="Удалить турфирму?"
+        footer={
+          <>
+            <Button variant="outline" onClick={() => setConfirmDelete(false)}>
+              Отмена
+            </Button>
+            <Button variant="danger" loading={busy} onClick={handleDelete}>
+              Удалить
+            </Button>
+          </>
+        }
       >
-        Удалить
-      </button>
+        <p className="text-sm text-ink-secondary">Турфирма и все её данные будут удалены безвозвратно.</p>
+      </Modal>
     </div>
   );
 }

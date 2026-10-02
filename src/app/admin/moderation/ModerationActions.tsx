@@ -2,15 +2,18 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Check, X } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Textarea } from "@/components/ui/Input";
 
 export function ModerationActions({ companyId }: { companyId: string }) {
   const router = useRouter();
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState<"APPROVED" | "REJECTED" | null>(null);
   const [showReject, setShowReject] = useState(false);
   const [comment, setComment] = useState("");
 
   async function act(status: "APPROVED" | "REJECTED") {
-    setBusy(true);
+    setBusy(status);
     await fetch(`/api/admin/companies/${companyId}/moderate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -21,25 +24,27 @@ export function ModerationActions({ companyId }: { companyId: string }) {
 
   if (showReject) {
     return (
-      <div className="flex flex-col gap-2 w-64">
-        <textarea
+      <div className="flex w-full flex-col gap-2 lg:w-72">
+        <Textarea
+          label="Причина отклонения"
+          required
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          placeholder="Причина отклонения (необязательно)"
-          rows={2}
-          className="rounded-md border border-gray-300 px-2 py-1 text-sm"
+          rows={3}
         />
         <div className="flex gap-2">
-          <button
+          <Button
+            variant="danger"
+            size="sm"
+            loading={busy === "REJECTED"}
+            disabled={!comment.trim()}
             onClick={() => act("REJECTED")}
-            disabled={busy}
-            className="rounded-md bg-red-600 px-3 py-1.5 text-sm text-white hover:bg-red-700 disabled:opacity-50"
           >
             Отклонить
-          </button>
-          <button onClick={() => setShowReject(false)} className="rounded-md border border-gray-300 px-3 py-1.5 text-sm">
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setShowReject(false)}>
             Отмена
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -47,20 +52,12 @@ export function ModerationActions({ companyId }: { companyId: string }) {
 
   return (
     <div className="flex gap-2">
-      <button
-        onClick={() => act("APPROVED")}
-        disabled={busy}
-        className="rounded-md bg-green-600 px-3 py-1.5 text-sm text-white hover:bg-green-700 disabled:opacity-50"
-      >
+      <Button size="sm" icon={<Check className="size-4" />} loading={busy === "APPROVED"} disabled={busy !== null} onClick={() => act("APPROVED")}>
         Одобрить
-      </button>
-      <button
-        onClick={() => setShowReject(true)}
-        disabled={busy}
-        className="rounded-md border border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-50"
-      >
+      </Button>
+      <Button variant="outline" size="sm" icon={<X className="size-4 text-danger" />} disabled={busy !== null} onClick={() => setShowReject(true)}>
         Отклонить
-      </button>
+      </Button>
     </div>
   );
 }

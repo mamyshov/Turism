@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
 
-export type CompanyTabPanel = TabItem & { content: React.ReactNode };
+export type TabPanel = TabItem & { content: React.ReactNode };
 
-export function CompanyTabs({ panels }: { panels: CompanyTabPanel[] }) {
+export function TabPanels({ panels }: { panels: TabPanel[] }) {
   const [active, setActive] = useState(panels[0]?.key ?? "");
   const current = panels.find((p) => p.key === active);
   return (

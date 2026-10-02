@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { X, Plus, Loader2, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 
@@ -48,15 +49,16 @@ export function PhotoManager({
 
   return (
     <div>
-      <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
+      <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {photos.map((photo) => (
-          <div key={photo.id} className="group relative aspect-square overflow-hidden rounded-lg bg-gray-100">
+          <div key={photo.id} className="group relative aspect-square overflow-hidden rounded-card bg-gray-100">
             <Image src={photo.url} alt="" fill className="object-cover" sizes="150px" />
             <button
               onClick={() => handleDelete(photo.id)}
-              className="absolute right-1 top-1 rounded-full bg-black/60 px-2 py-0.5 text-xs text-white opacity-0 transition group-hover:opacity-100"
+              aria-label={dict.delete}
+              className="focus-ring absolute right-2 top-2 flex size-8 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
             >
-              ✕
+              <X className="size-4" />
             </button>
           </div>
         ))}
@@ -65,9 +67,10 @@ export function PhotoManager({
           <button
             onClick={() => inputRef.current?.click()}
             disabled={uploading}
-            className="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-sm text-gray-400 hover:border-brand-500 hover:text-brand-600 disabled:opacity-50"
+            className="focus-ring flex aspect-square flex-col items-center justify-center gap-1 rounded-card border-2 border-dashed border-line text-sm text-ink-muted transition-colors hover:border-brand-500 hover:text-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {uploading ? dict.uploading : dict.add}
+            {uploading ? <Loader2 className="size-5 animate-spin" aria-hidden /> : <Plus className="size-5" aria-hidden />}
+            {uploading ? dict.uploading : dict.add.replace(/^\+\s*/, "")}
           </button>
         )}
       </div>
@@ -84,8 +87,13 @@ export function PhotoManager({
         }}
       />
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <p className="text-xs text-gray-400">
+      {error && (
+        <p role="alert" className="mb-2 flex items-center gap-1.5 text-sm text-danger">
+          <AlertCircle className="size-4" aria-hidden />
+          {error}
+        </p>
+      )}
+      <p className="text-xs text-ink-muted">
         {dict.photosCount.replace("{count}", String(photos.length)).replace("{limit}", String(limit))}
       </p>
     </div>

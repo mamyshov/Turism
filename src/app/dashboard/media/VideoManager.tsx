@@ -2,6 +2,9 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { Video as VideoIcon, Trash2, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 
 type VideoItem = { id: string; type: string; url: string; title: string | null };
@@ -64,63 +67,55 @@ export function VideoManager({
   return (
     <div className="space-y-4">
       {videos.map((video) => (
-        <div key={video.id} className="flex items-center justify-between rounded-lg border border-gray-200 p-3 text-sm">
-          <div>
-            <span className="font-medium">
+        <div key={video.id} className="flex items-center justify-between gap-3 rounded-card border border-line bg-white p-3 text-sm shadow-card">
+          <VideoIcon className="size-5 flex-none text-brand-600" aria-hidden />
+          <div className="min-w-0 flex-1">
+            <span className="font-medium text-ink">
               {video.title || (video.type === "EMBED" ? dict.videoLinkLabel : dict.videoFileLabel)}
             </span>
-            <p className="truncate text-xs text-gray-400 max-w-xs">{video.url}</p>
+            <p className="truncate text-xs text-ink-muted">{video.url}</p>
           </div>
-          <button onClick={() => handleDelete(video.id)} className="text-red-600 hover:underline">
-            {dict.delete}
-          </button>
+          <Button variant="ghost" size="sm" aria-label={dict.delete} icon={<Trash2 className="size-4 text-danger" />} onClick={() => handleDelete(video.id)}>
+            <span className="hidden text-danger sm:inline">{dict.delete}</span>
+          </Button>
         </div>
       ))}
 
-      <form onSubmit={handleSubmit} className="space-y-3 rounded-lg border border-gray-200 p-4">
-        <div className="flex gap-4 text-sm">
+      <form onSubmit={handleSubmit} className="space-y-3 rounded-card border border-line bg-white p-4 shadow-card">
+        <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
           <label className="flex items-center gap-1.5">
-            <input type="radio" checked={mode === "EMBED"} onChange={() => setMode("EMBED")} />
+            <input type="radio" className="accent-brand-600" checked={mode === "EMBED"} onChange={() => setMode("EMBED")} />
             {dict.videoEmbedOption}
           </label>
           <label className="flex items-center gap-1.5">
-            <input type="radio" checked={mode === "UPLOAD"} onChange={() => setMode("UPLOAD")} />
+            <input type="radio" className="accent-brand-600" checked={mode === "UPLOAD"} onChange={() => setMode("UPLOAD")} />
             {dict.videoUploadOption}
           </label>
         </div>
 
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder={dict.videoTitlePlaceholder}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-        />
+        <Input aria-label={dict.videoTitlePlaceholder} value={title} onChange={(e) => setTitle(e.target.value)} placeholder={dict.videoTitlePlaceholder} />
 
         {mode === "EMBED" ? (
-          <input
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder={dict.videoUrlPlaceholder}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
+          <Input aria-label={dict.videoLinkLabel} value={url} onChange={(e) => setUrl(e.target.value)} placeholder={dict.videoUrlPlaceholder} />
         ) : (
           <input
             type="file"
             accept="video/mp4,video/webm,video/quicktime"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-            className="block w-full text-sm text-gray-600 file:mr-4 file:rounded-md file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-brand-700"
+            className="focus-ring block w-full rounded-md text-sm text-ink-secondary file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:font-medium file:text-brand-700 hover:file:bg-brand-100"
           />
         )}
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <p role="alert" className="flex items-center gap-1.5 text-sm text-danger">
+            <AlertCircle className="size-4" aria-hidden />
+            {error}
+          </p>
+        )}
 
-        <button
-          type="submit"
-          disabled={saving}
-          className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
-        >
+        <Button type="submit" loading={saving}>
           {saving ? dict.uploading : dict.addVideo}
-        </button>
+        </Button>
       </form>
     </div>
   );

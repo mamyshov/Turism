@@ -31,6 +31,28 @@ MVP-платформа для турфирм и частных гидов Кыр
 - **Anthropic API (Claude)** — для AI-подбора тура (`@anthropic-ai/sdk`),
   вызывается только с сервера (API route), ключ не покидает бэкенд.
 
+## UI/UX (редизайн по `KyrgyzTour_Hub_UI_UX_TZ`)
+
+Презентационный слой переработан без изменений API, Prisma, авторизации и
+бизнес-логики:
+
+- Дизайн-система: Tailwind-токены (brand-палитра, радиусы 8/12/16/20/24,
+  `shadow-card`), шрифт Inter (`next/font`, latin + cyrillic + cyrillic-ext),
+  иконки только Lucide — эмодзи в UI не используются.
+- Компоненты: `src/components/ui` (Button, Input/Select/Textarea, Badge,
+  Modal, Drawer, Tabs/TabPanels, Skeleton, Toast, EmptyState/ErrorState,
+  FavoriteButton), `layout/Sidebar`, `dashboard/StatCard|AnalyticsChart`,
+  `reviews/ReviewCard`, `company/ContactButtons`.
+- Публичная часть, личный кабинет (SaaS: sidebar, KPI, график 7/30/90 дней,
+  таблица туров на desktop / карточки на mobile) и админка (clean admin).
+- Осознанно не сделано (потребовало бы новой логики/моделей — отдельное
+  согласование по разделу 3 ТЗ): сортировка каталога, фильтр по
+  длительности, «Подписаться», серверное «Избранное» (иконка-сердце на
+  карточке работает локально через localStorage), админские разделы
+  Reels/Тарифы/Статистика/Настройки.
+- Hero использует брендовый градиент вместо фотографий — нужны реальные
+  фото Кыргызстана.
+
 ## Что реализовано
 
 **Этап 1:**

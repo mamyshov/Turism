@@ -8,7 +8,7 @@ import Image from "next/image";
 import { MapPin, ShieldCheck, FileText, Download } from "lucide-react";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { StarRating } from "@/components/StarRating";
-import { CompanyTabs, type CompanyTabPanel } from "@/components/company/CompanyTabs";
+import { TabPanels, type TabPanel } from "@/components/ui/TabPanels";
 import { ContactButtons, MobileContactBar } from "@/components/company/ContactButtons";
 import { ReviewCard } from "@/components/reviews/ReviewCard";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -180,7 +180,7 @@ export default async function CompanyPage({ params }: { params: { slug: string }
     </div>
   );
 
-  const panels: CompanyTabPanel[] = [
+  const panels: TabPanel[] = [
     { key: "tours", label: dict.tours, count: company.tours.length, content: toursPanel },
     { key: "photos", label: dict.photos, count: company.photos.length, content: photosPanel },
     { key: "videos", label: dict.videos, count: company.videos.length, content: videosPanel },
@@ -199,14 +199,14 @@ export default async function CompanyPage({ params }: { params: { slug: string }
 
       <div className="mx-auto max-w-container px-4 sm:px-6">
         <div className="-mt-10 flex flex-col gap-4 sm:-mt-12 md:flex-row md:items-end md:justify-between">
-          <div className="flex items-end gap-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
             <div
               aria-hidden
               className="flex size-20 flex-none items-center justify-center rounded-card border-4 border-white bg-brand-600 text-3xl font-bold text-white shadow-card sm:size-24"
             >
               {company.name.charAt(0).toUpperCase()}
             </div>
-            <div className="min-w-0 pb-1">
+            <div className="min-w-0 sm:pb-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-balance-wrap text-2xl font-bold text-ink sm:text-3xl">{company.name}</h1>
                 {company.tariff === "PRO" && (
@@ -237,7 +237,7 @@ export default async function CompanyPage({ params }: { params: { slug: string }
         </div>
 
         <div className="mt-4 md:hidden">
-          <ContactButtons company={company} dict={dict} />
+          <ContactButtons company={company} dict={dict} secondaryOnly />
         </div>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px]">
@@ -276,7 +276,7 @@ export default async function CompanyPage({ params }: { params: { slug: string }
         </div>
 
         <div className="mt-10">
-          <CompanyTabs panels={panels} />
+          <TabPanels panels={panels} />
         </div>
       </div>
 

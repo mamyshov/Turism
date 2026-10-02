@@ -2,6 +2,9 @@
 
 import { useState, FormEvent } from "react";
 import Link from "next/link";
+import { CheckCircle2, AlertCircle, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Input, Select, Textarea } from "@/components/ui/Input";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 
 type ProfileData = {
@@ -64,31 +67,21 @@ export function ProfileForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">{dict.description}</label>
-        <textarea
-          rows={5}
-          value={data.description}
-          onChange={(e) => setData({ ...data, description: e.target.value })}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          placeholder={dict.descriptionPlaceholder}
-        />
-      </div>
+    <form onSubmit={handleSubmit} className="max-w-2xl space-y-6 rounded-card border border-line bg-white p-5 shadow-card sm:p-6">
+      <Textarea
+        label={dict.description}
+        rows={5}
+        value={data.description}
+        onChange={(e) => setData({ ...data, description: e.target.value })}
+        placeholder={dict.descriptionPlaceholder}
+      />
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">{dict.region}</label>
-        <select
-          value={data.region}
-          onChange={(e) => setData({ ...data, region: e.target.value })}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white"
-        >
-          <option value="">{dict.regionNotSet}</option>
-          {regions.map((r) => (
-            <option key={r.key} value={r.key}>{r.label}</option>
-          ))}
-        </select>
-      </div>
+      <Select label={dict.region} value={data.region} onChange={(e) => setData({ ...data, region: e.target.value })}>
+        <option value="">{dict.regionNotSet}</option>
+        {regions.map((r) => (
+          <option key={r.key} value={r.key}>{r.label}</option>
+        ))}
+      </Select>
 
       <CheckboxGroup
         label={dict.languages}
@@ -104,56 +97,40 @@ export function ProfileForm({
         onChange={(key) => setData({ ...data, categories: toggle(data.categories, key) })}
       />
 
-      <div className="grid sm:grid-cols-2 gap-4">
-        <TextField label={dict.phone} value={data.phone} onChange={(v) => setData({ ...data, phone: v })} placeholder="+996 700 000 000" />
-        <TextField label={dict.whatsapp} value={data.whatsapp} onChange={(v) => setData({ ...data, whatsapp: v })} placeholder="996700000000" />
-        <TextField label={dict.instagram} value={data.instagram} onChange={(v) => setData({ ...data, instagram: v })} placeholder="@yourcompany" />
-        <TextField label={dict.email} value={data.contactEmail} onChange={(v) => setData({ ...data, contactEmail: v })} type="email" />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Input label={dict.phone} value={data.phone} onChange={(e) => setData({ ...data, phone: e.target.value })} placeholder="+996 700 000 000" />
+        <Input label={dict.whatsapp} value={data.whatsapp} onChange={(e) => setData({ ...data, whatsapp: e.target.value })} placeholder="996700000000" />
+        <Input label={dict.instagram} value={data.instagram} onChange={(e) => setData({ ...data, instagram: e.target.value })} placeholder="@yourcompany" />
+        <Input label={dict.email} type="email" value={data.contactEmail} onChange={(e) => setData({ ...data, contactEmail: e.target.value })} />
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      {saved && <p className="text-sm text-green-600">{dict.saved}</p>}
+      {error && (
+        <p role="alert" className="flex items-center gap-1.5 text-sm text-danger">
+          <AlertCircle className="size-4" aria-hidden />
+          {error}
+        </p>
+      )}
+      {saved && (
+        <p role="status" className="flex items-center gap-1.5 text-sm text-success">
+          <CheckCircle2 className="size-4" aria-hidden />
+          {dict.saved}
+        </p>
+      )}
 
-      <div className="flex items-center gap-4">
-        <button
-          type="submit"
-          disabled={saving}
-          className="rounded-md bg-brand-600 px-5 py-2.5 font-medium text-white hover:bg-brand-700 disabled:opacity-50"
-        >
+      <div className="flex flex-wrap items-center gap-4">
+        <Button type="submit" loading={saving}>
           {saving ? dict.saving : dict.save}
-        </button>
-        <Link href={`/company/${companySlug}`} className="text-sm text-brand-700 hover:underline" target="_blank">
-          {dict.preview}
+        </Button>
+        <Link
+          href={`/company/${companySlug}`}
+          className="focus-ring inline-flex items-center gap-1.5 rounded text-sm font-medium text-brand-700 hover:underline"
+          target="_blank"
+        >
+          <ExternalLink className="size-4" aria-hidden />
+          {dict.preview.replace(/\s*→\s*$/, "")}
         </Link>
       </div>
     </form>
-  );
-}
-
-function TextField({
-  label,
-  value,
-  onChange,
-  type = "text",
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
-  placeholder?: string;
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-      <input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-      />
-    </div>
   );
 }
 
@@ -170,20 +147,20 @@ function CheckboxGroup({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+      <p className="mb-2 text-sm font-medium text-ink">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map((o) => (
           <label
             key={o.key}
-            className={`cursor-pointer rounded-full border px-3 py-1.5 text-sm ${
+            className={`cursor-pointer rounded-full border px-3 py-1.5 text-sm transition-colors focus-within:ring-2 focus-within:ring-brand-500 ${
               selected.includes(o.key)
                 ? "border-brand-600 bg-brand-50 text-brand-700"
-                : "border-gray-300 text-gray-600"
+                : "border-line text-ink-secondary hover:bg-gray-50"
             }`}
           >
             <input
               type="checkbox"
-              className="hidden"
+              className="sr-only"
               checked={selected.includes(o.key)}
               onChange={() => onChange(o.key)}
             />

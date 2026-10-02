@@ -36,7 +36,7 @@ export function Navbar({
           <span className="hidden sm:inline">KyrgyzTour Hub</span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium text-ink-secondary md:flex">
+        <nav className="hidden items-center gap-6 text-sm font-medium text-ink-secondary lg:flex">
           {links.map((l) => (
             <Link key={l.href} href={l.href} className="focus-ring rounded transition-colors hover:text-brand-700">
               {l.label}
@@ -48,7 +48,7 @@ export function Navbar({
           <Link
             href="/search"
             aria-label={dict.catalog}
-            className="focus-ring hidden rounded-md p-2 text-ink-secondary hover:bg-gray-100 hover:text-ink md:inline-flex"
+            className="focus-ring hidden rounded-md p-2 text-ink-secondary hover:bg-gray-100 hover:text-ink lg:inline-flex"
           >
             <Search className="size-5" />
           </Link>
@@ -56,7 +56,7 @@ export function Navbar({
             <LanguageSwitcher locale={locale} />
           </div>
 
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             {status === "authenticated" ? (
               <>
                 {session.user.role === "ADMIN" && (
@@ -95,7 +95,7 @@ export function Navbar({
           <button
             aria-label={mobileOpen ? "Закрыть меню" : "Открыть меню"}
             onClick={() => setMobileOpen((v) => !v)}
-            className="focus-ring rounded-md p-2 text-ink hover:bg-gray-100 md:hidden"
+            className="focus-ring rounded-md p-2 text-ink hover:bg-gray-100 lg:hidden"
           >
             {mobileOpen ? <X className="size-6" /> : <Menu className="size-6" />}
           </button>
@@ -103,7 +103,7 @@ export function Navbar({
       </div>
 
       {mobileOpen && (
-        <div className="absolute inset-x-0 top-16 z-40 border-b border-line bg-white px-4 py-4 shadow-card md:hidden">
+        <div className="absolute inset-x-0 top-16 z-40 border-b border-line bg-white px-4 py-4 shadow-card lg:hidden">
           <nav className="flex flex-col gap-1 text-sm font-medium text-ink">
             {links.map((l) => (
               <Link

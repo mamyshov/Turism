@@ -2,7 +2,12 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { Plus, Trash2, AlertCircle, Map } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Input, Textarea } from "@/components/ui/Input";
+import { EmptyState } from "@/components/ui/EmptyState";
 import type { Dictionary } from "@/lib/i18n/dictionary";
+import type { Locale } from "@/lib/i18n/locales";
 
 type Tour = {
   id: string;
@@ -27,12 +32,16 @@ const EMPTY_FORM = {
   excluded: "",
 };
 
+const CURRENCY: Record<Locale, string> = { ru: "сом", ky: "сом", en: "KGS" };
+
 export function TourManager({
   initialTours,
   dict,
+  locale,
 }: {
   initialTours: Tour[];
   dict: Dictionary["dashboard"]["tours"];
+  locale: Locale;
 }) {
   const router = useRouter();
   const [tours, setTours] = useState(initialTours);
@@ -40,6 +49,7 @@ export function TourManager({
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -66,106 +76,130 @@ export function TourManager({
   }
 
   async function handleDelete(id: string) {
+    setDeletingId(id);
     setTours((prev) => prev.filter((t) => t.id !== id));
     await fetch(`/api/companies/me/tours/${id}`, { method: "DELETE" });
+    setDeletingId(null);
     router.refresh();
   }
 
+  const durationOf = (t: Tour) =>
+    [
+      t.durationDays ? `${t.durationDays} ${dict.daysSuffix}` : null,
+      t.durationHours ? `${t.durationHours} ${dict.hoursSuffix}` : null,
+      t.maxPeople ? dict.maxPeopleSuffix.replace("{n}", String(t.maxPeople)) : null,
+    ]
+      .filter(Boolean)
+      .join(" · ") || "—";
+
+  const deleteButton = (tour: Tour) => (
+    <Button
+      variant="ghost"
+      size="sm"
+      aria-label={`${dict.delete}: ${tour.title}`}
+      loading={deletingId === tour.id}
+      icon={<Trash2 className="size-4 text-danger" />}
+      onClick={() => handleDelete(tour.id)}
+    >
+      <span className="text-danger">{dict.delete}</span>
+    </Button>
+  );
+
   return (
     <div className="space-y-4">
-      {tours.map((tour) => (
-        <div key={tour.id} className="rounded-lg border border-gray-200 p-4">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <h3 className="font-semibold">{tour.title}</h3>
-              <p className="text-sm text-gray-500">
-                {[
-                  tour.durationDays ? `${tour.durationDays} ${dict.daysSuffix}` : null,
-                  tour.durationHours ? `${tour.durationHours} ${dict.hoursSuffix}` : null,
-                  tour.maxPeople ? dict.maxPeopleSuffix.replace("{n}", String(tour.maxPeople)) : null,
-                ].filter(Boolean).join(" · ")}
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="font-semibold text-brand-700">{tour.price.toLocaleString()} сом</span>
-              <button onClick={() => handleDelete(tour.id)} className="text-sm text-red-600 hover:underline">
-                {dict.delete}
-              </button>
-            </div>
-          </div>
-        </div>
-      ))}
+      <div className="flex justify-end">
+        {!showForm && (
+          <Button icon={<Plus className="size-4" />} onClick={() => setShowForm(true)}>
+            {dict.add.replace(/^\+\s*/, "")}
+          </Button>
+        )}
+      </div>
 
-      {showForm ? (
-        <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-gray-200 p-4">
-          <Field label={dict.titleLabel} value={form.title} onChange={(v) => setForm({ ...form, title: v })} required />
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{dict.descriptionLabel}</label>
-            <textarea
-              rows={3}
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            />
+      {showForm && (
+        <form onSubmit={handleSubmit} className="space-y-4 rounded-card border border-line bg-white p-5 shadow-card">
+          <Input label={dict.titleLabel} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+          <Textarea
+            label={dict.descriptionLabel}
+            rows={3}
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <Input label={dict.daysLabel} type="number" min={0} value={form.durationDays} onChange={(e) => setForm({ ...form, durationDays: e.target.value })} />
+            <Input label={dict.hoursLabel} type="number" min={0} value={form.durationHours} onChange={(e) => setForm({ ...form, durationHours: e.target.value })} />
+            <Input label={dict.priceLabel} type="number" min={0} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
+            <Input label={dict.maxPeopleLabel} type="number" min={1} value={form.maxPeople} onChange={(e) => setForm({ ...form, maxPeople: e.target.value })} />
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <Field label={dict.daysLabel} type="number" value={form.durationDays} onChange={(v) => setForm({ ...form, durationDays: v })} />
-            <Field label={dict.hoursLabel} type="number" value={form.durationHours} onChange={(v) => setForm({ ...form, durationHours: v })} />
-            <Field label={dict.priceLabel} type="number" value={form.price} onChange={(v) => setForm({ ...form, price: v })} required />
-            <Field label={dict.maxPeopleLabel} type="number" value={form.maxPeople} onChange={(v) => setForm({ ...form, maxPeople: v })} />
-          </div>
-          <Field label={dict.includedLabel} value={form.included} onChange={(v) => setForm({ ...form, included: v })} placeholder={dict.includedPlaceholder} />
-          <Field label={dict.excludedLabel} value={form.excluded} onChange={(v) => setForm({ ...form, excluded: v })} placeholder={dict.excludedPlaceholder} />
+          <Input label={dict.includedLabel} value={form.included} onChange={(e) => setForm({ ...form, included: e.target.value })} placeholder={dict.includedPlaceholder} />
+          <Input label={dict.excludedLabel} value={form.excluded} onChange={(e) => setForm({ ...form, excluded: e.target.value })} placeholder={dict.excludedPlaceholder} />
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && (
+            <p role="alert" className="flex items-center gap-1.5 text-sm text-danger">
+              <AlertCircle className="size-4" aria-hidden />
+              {error}
+            </p>
+          )}
 
-          <div className="flex gap-3">
-            <button type="submit" disabled={saving} className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50">
-              {saving ? dict.saving : dict.addButton}
-            </button>
-            <button type="button" onClick={() => setShowForm(false)} className="rounded-md border border-gray-300 px-4 py-2 text-sm">
+          <div className="flex gap-2">
+            <Button type="submit" loading={saving}>
+              {dict.addButton}
+            </Button>
+            <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
               {dict.cancel}
-            </button>
+            </Button>
           </div>
         </form>
-      ) : (
-        <button
-          onClick={() => setShowForm(true)}
-          className="w-full rounded-lg border-2 border-dashed border-gray-300 py-3 text-sm text-gray-500 hover:border-brand-500 hover:text-brand-600"
-        >
-          {dict.add}
-        </button>
       )}
-    </div>
-  );
-}
 
-function Field({
-  label,
-  value,
-  onChange,
-  type = "text",
-  required,
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
-  required?: boolean;
-  placeholder?: string;
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-      <input
-        type={type}
-        value={value}
-        required={required}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-      />
+      {tours.length === 0 && !showForm ? (
+        <EmptyState icon={Map} title={dict.empty} />
+      ) : (
+        tours.length > 0 && (
+          <>
+            {/* Desktop/tablet: table */}
+            <div className="hidden overflow-hidden rounded-card border border-line bg-white shadow-card md:block">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 text-left text-xs uppercase tracking-wide text-ink-muted">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">{dict.titleLabel}</th>
+                    <th className="px-4 py-3 font-medium">{dict.durationLabel}</th>
+                    <th className="px-4 py-3 font-medium">{dict.priceLabel}</th>
+                    <th className="px-4 py-3 text-right font-medium">{dict.actionsLabel}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line">
+                  {tours.map((tour) => (
+                    <tr key={tour.id} className="hover:bg-gray-50">
+                      <td className="text-balance-wrap max-w-xs px-4 py-3 font-medium text-ink">{tour.title}</td>
+                      <td className="px-4 py-3 text-ink-secondary">{durationOf(tour)}</td>
+                      <td className="whitespace-nowrap px-4 py-3 font-semibold text-brand-700">
+                        {tour.price.toLocaleString()} {CURRENCY[locale]}
+                      </td>
+                      <td className="px-4 py-3 text-right">{deleteButton(tour)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile: one card per tour */}
+            <div className="space-y-3 md:hidden">
+              {tours.map((tour) => (
+                <div key={tour.id} className="rounded-card border border-line bg-white p-4 shadow-card">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-balance-wrap font-semibold text-ink">{tour.title}</h3>
+                    <span className="whitespace-nowrap font-semibold text-brand-700">
+                      {tour.price.toLocaleString()} {CURRENCY[locale]}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm text-ink-secondary">{durationOf(tour)}</p>
+                  <div className="mt-3 flex justify-end border-t border-line pt-2">{deleteButton(tour)}</div>
+                </div>
+              ))}
+            </div>
+          </>
+        )
+      )}
     </div>
   );
 }

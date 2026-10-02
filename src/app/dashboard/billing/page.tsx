@@ -1,40 +1,46 @@
+import { Check } from "lucide-react";
 import { requireCurrentCompany } from "@/lib/current-company";
 import { TARIFFS } from "@/lib/constants";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/dictionary";
+import { Badge } from "@/components/ui/Badge";
 
 export default async function BillingPage() {
   const company = await requireCurrentCompany();
   const dict = getDictionary(getLocale()).dashboard.billing;
 
   return (
-    <div className="max-w-2xl">
-      <h2 className="text-lg font-semibold mb-1">{dict.title}</h2>
-      <p className="mb-6 text-sm text-gray-500">{dict.subtitle}</p>
+    <div>
+      <h2 className="text-xl font-semibold text-ink">{dict.title}</h2>
+      <p className="mb-6 max-w-2xl text-sm text-ink-secondary">{dict.subtitle}</p>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3">
         {TARIFFS.map((tariff) => {
           const t = dict.tariffs[tariff.key] ?? { label: tariff.label, period: tariff.period, features: tariff.features as unknown as string[] };
+          const current = company.tariff === tariff.key;
           return (
             <div
               key={tariff.key}
-              className={`rounded-lg border p-4 ${
-                company.tariff === tariff.key ? "border-brand-600 ring-1 ring-brand-600" : "border-gray-200"
+              className={`flex flex-col rounded-card border bg-white p-5 shadow-card ${
+                current ? "border-brand-600 ring-1 ring-brand-600" : "border-line"
               }`}
             >
-              <h3 className="font-semibold">{t.label}</h3>
-              <p className="mt-1 text-lg font-bold text-brand-700">
-                {tariff.price === 0 ? dict.free : `${tariff.price} ${t.period}`}
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="font-semibold text-ink">{t.label}</h3>
+                {current && <Badge tone="brand">{dict.currentTariff}</Badge>}
+              </div>
+              <p className="mt-2 text-2xl font-bold text-brand-700">
+                {tariff.price === 0 ? dict.free : `${tariff.price}`}
               </p>
-              {tariff.price > 0 && <p className="text-xs text-gray-400">{t.period}</p>}
-              <ul className="mt-3 space-y-1 text-sm text-gray-600">
+              <p className="text-xs text-ink-muted">{t.period}</p>
+              <ul className="mt-4 space-y-2 text-sm text-ink-secondary">
                 {t.features.map((f) => (
-                  <li key={f}>• {f}</li>
+                  <li key={f} className="flex items-start gap-2">
+                    <Check className="mt-0.5 size-4 flex-none text-brand-600" aria-hidden />
+                    {f}
+                  </li>
                 ))}
               </ul>
-              {company.tariff === tariff.key && (
-                <p className="mt-3 text-xs font-medium text-brand-700">{dict.currentTariff}</p>
-              )}
             </div>
           );
         })}

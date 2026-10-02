@@ -3,13 +3,42 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  Map,
+  Image as ImageIcon,
+  Clapperboard,
+  MessageSquare,
+  BarChart3,
+  CreditCard,
+  Settings,
+  ShieldCheck,
+  Building2,
+} from "lucide-react";
+
+// Icons are referenced by name because component references can't cross the
+// server -> client boundary as props.
+const ICONS = {
+  home: LayoutDashboard,
+  tours: Map,
+  media: ImageIcon,
+  reels: Clapperboard,
+  reviews: MessageSquare,
+  stats: BarChart3,
+  billing: CreditCard,
+  settings: Settings,
+  moderation: ShieldCheck,
+  companies: Building2,
+};
+
+export type SidebarIcon = keyof typeof ICONS;
 
 export type SidebarItem = {
   href: string;
   label: string;
-  icon: LucideIcon;
+  icon: SidebarIcon;
 };
 
 export function Sidebar({
@@ -24,12 +53,13 @@ export function Sidebar({
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const isActive = (href: string) => pathname === href || pathname?.startsWith(href + "/");
+  const isActive = (href: string) =>
+    pathname === href || (href.split("/").length > 2 && !!pathname?.startsWith(href + "/"));
 
   const nav = (onNavigate?: () => void) => (
     <nav className="flex flex-col gap-1">
       {items.map((item) => {
-        const Icon = item.icon;
+        const Icon = ICONS[item.icon];
         const active = isActive(item.href);
         return (
           <Link

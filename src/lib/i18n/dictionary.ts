@@ -242,6 +242,9 @@ export type Dictionary = {
       daysSuffix: string;
       hoursSuffix: string;
       maxPeopleSuffix: string;
+      empty: string;
+      durationLabel: string;
+      actionsLabel: string;
       errorGeneric: string;
     };
     stats: {
@@ -250,6 +253,7 @@ export type Dictionary = {
       totalViews: string;
       periodViews: string;
       viewsSuffix: string;
+      likes: string;
     };
     billing: {
       title: string;
@@ -512,6 +516,9 @@ const ru: Dictionary = {
       daysSuffix: "дн.",
       hoursSuffix: "ч.",
       maxPeopleSuffix: "до {n} чел.",
+      empty: "Пока нет туров. Добавьте первый — он появится на странице вашего профиля.",
+      durationLabel: "Длительность",
+      actionsLabel: "Действия",
       errorGeneric: "Не удалось добавить тур.",
     },
     stats: {
@@ -520,6 +527,7 @@ const ru: Dictionary = {
       totalViews: "Всего просмотров",
       periodViews: "За {days} дней",
       viewsSuffix: "просм.",
+      likes: "Лайки Reels",
     },
     billing: {
       title: "Тариф",
@@ -798,6 +806,9 @@ const ky: Dictionary = {
       daysSuffix: "күн",
       hoursSuffix: "саат",
       maxPeopleSuffix: "{n} адамга чейин",
+      empty: "Азырынча турлар жок. Биринчисин кошуңуз — ал профилиңиздин бетинде көрүнөт.",
+      durationLabel: "Узактыгы",
+      actionsLabel: "Аракеттер",
       errorGeneric: "Турду кошууга болбоду.",
     },
     stats: {
@@ -806,6 +817,7 @@ const ky: Dictionary = {
       totalViews: "Бардык көрүүлөр",
       periodViews: "{days} күн ичинде",
       viewsSuffix: "көрүү",
+      likes: "Reels лайктары",
     },
     billing: {
       title: "Тариф",
@@ -1084,6 +1096,9 @@ const en: Dictionary = {
       daysSuffix: "days",
       hoursSuffix: "hrs",
       maxPeopleSuffix: "up to {n} people",
+      empty: "No tours yet. Add your first one — it will appear on your profile page.",
+      durationLabel: "Duration",
+      actionsLabel: "Actions",
       errorGeneric: "Couldn't add the tour.",
     },
     stats: {
@@ -1092,6 +1107,7 @@ const en: Dictionary = {
       totalViews: "Total views",
       periodViews: "Last {days} days",
       viewsSuffix: "views",
+      likes: "Reels likes",
     },
     billing: {
       title: "Plan",

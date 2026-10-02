@@ -5,13 +5,15 @@ import { TourManager } from "./TourManager";
 
 export default async function ToursPage() {
   const company = await requireCurrentCompany();
-  const dict = getDictionary(getLocale()).dashboard.tours;
+  const locale = getLocale();
+  const dict = getDictionary(locale).dashboard.tours;
 
   return (
-    <div className="max-w-2xl">
-      <h2 className="text-lg font-semibold mb-1">{dict.title}</h2>
-      <p className="mb-6 text-sm text-gray-500">{dict.subtitle}</p>
+    <div>
+      <h2 className="text-xl font-semibold text-ink">{dict.title}</h2>
+      <p className="mb-6 text-sm text-ink-secondary">{dict.subtitle}</p>
       <TourManager
+        locale={locale}
         initialTours={company.tours.map((t) => ({
           id: t.id,
           title: t.title,
