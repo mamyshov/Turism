@@ -5,6 +5,7 @@ const NAV: SidebarItem[] = [
   { href: "/admin/moderation", label: "Модерация", icon: "moderation" },
   { href: "/admin/companies", label: "Турфирмы", icon: "companies" },
   { href: "/admin/reviews", label: "Отзывы", icon: "reviews" },
+  { href: "/admin/reels", label: "Reels", icon: "reels" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
