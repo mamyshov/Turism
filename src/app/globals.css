@@ -7,5 +7,23 @@ html {
 }
 
 body {
-  @apply bg-gray-50 text-gray-900;
+  @apply bg-surface-bg text-ink antialiased;
+}
+
+/* Keep long translated strings (ky/en) from breaking card layouts */
+.text-balance-wrap {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+@layer utilities {
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
 }

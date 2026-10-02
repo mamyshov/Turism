@@ -27,6 +27,7 @@ export type Dictionary = {
   };
   search: {
     title: string;
+    filtersButton: string;
     searchLabel: string;
     searchPlaceholder: string;
     region: string;
@@ -52,12 +53,14 @@ export type Dictionary = {
   };
   company: {
     verified: string;
+    priceFrom: string;
     about: string;
     languages: string;
     tourTypes: string;
     videos: string;
     pdfGuides: string;
     tours: string;
+    photos: string;
     included: string;
     excluded: string;
     reviews: string;
@@ -66,6 +69,11 @@ export type Dictionary = {
     call: string;
     email: string;
     instagram: string;
+    noPhotos: string;
+    noVideos: string;
+    noPdfGuides: string;
+    noTours: string;
+    noReviews: string;
     reviewFormRating: string;
     reviewFormName: string;
     reviewFormEmail: string;
@@ -94,6 +102,16 @@ export type Dictionary = {
     registerSuccessBody: string;
     wrongCredentials: string;
     passwordMismatch: string;
+    stepBasic: string;
+    stepContacts: string;
+    stepDocs: string;
+    stepReview: string;
+    next: string;
+    back: string;
+    reviewHint: string;
+    statusPending: string;
+    contactsTitle: string;
+    contactsAddress: string;
   };
   about: { title: string; body1: string; body2: string };
   contacts: { title: string };
@@ -108,12 +126,15 @@ export type Dictionary = {
   };
   dashboard: {
     nav: {
+      home: string;
       profile: string;
       media: string;
       reels: string;
+      reviews: string;
       tours: string;
       stats: string;
       billing: string;
+      logout: string;
     };
     status: {
       pending: string;
@@ -124,6 +145,29 @@ export type Dictionary = {
     pendingNotice: string;
     rejectedNotice: string;
     blockedNotice: string;
+    home: {
+      title: string;
+      subtitle: string;
+      kpiViews: string;
+      kpiReviews: string;
+      kpiActiveTours: string;
+      kpiTariff: string;
+      chartTitle: string;
+      recentReviewsTitle: string;
+      recentReviewsEmpty: string;
+      viewAll: string;
+    };
+    chart: {
+      period7: string;
+      period30: string;
+      period90: string;
+    };
+    reviewsPage: {
+      title: string;
+      subtitle: string;
+      empty: string;
+      emptyHint: string;
+    };
     profile: {
       description: string;
       descriptionPlaceholder: string;
@@ -245,6 +289,7 @@ const ru: Dictionary = {
   },
   search: {
     title: "Каталог турфирм и гидов",
+    filtersButton: "Фильтры",
     searchLabel: "Поиск",
     searchPlaceholder: "Название или описание",
     region: "Регион",
@@ -258,7 +303,7 @@ const ru: Dictionary = {
     all: "Все",
     found: "Найдено",
     empty: "По вашему запросу ничего не найдено. Попробуйте изменить фильтры.",
-    aiTitle: "🤖 AI-подбор тура",
+    aiTitle: "AI-подбор тура",
     aiSubtitle: "Опишите словами, что вы хотите — Claude подберёт подходящие туры.",
     aiPlaceholder: "Например: треккинг на 5 дней, не очень сложный, ночёвки в юртах",
     aiButton: "Подобрать с помощью AI",
@@ -270,12 +315,14 @@ const ru: Dictionary = {
   },
   company: {
     verified: "Проверено",
+    priceFrom: "от {price} сом",
     about: "О компании",
     languages: "Языки",
     tourTypes: "Типы туров",
     videos: "Видео-гиды",
     pdfGuides: "PDF-гиды",
     tours: "Туры",
+    photos: "Фото",
     included: "Включено",
     excluded: "Не включено",
     reviews: "Отзывы",
@@ -284,6 +331,11 @@ const ru: Dictionary = {
     call: "Позвонить",
     email: "Email",
     instagram: "Instagram",
+    noPhotos: "Турфирма пока не загрузила фотографии.",
+    noVideos: "Видео-гидов пока нет.",
+    noPdfGuides: "PDF-гидов пока нет.",
+    noTours: "Туры пока не добавлены.",
+    noReviews: "Пока нет отзывов. Будьте первым!",
     reviewFormRating: "Оценка",
     reviewFormName: "Ваше имя",
     reviewFormEmail: "Email",
@@ -314,6 +366,16 @@ const ru: Dictionary = {
       "Ваш профиль отправлен на модерацию. После проверки администратором вы получите доступ к личному кабинету. Перенаправляем на страницу входа…",
     wrongCredentials: "Неверный email или пароль.",
     passwordMismatch: "Пароли не совпадают.",
+    stepBasic: "Основное",
+    stepContacts: "Контакты",
+    stepDocs: "Документы",
+    stepReview: "Проверка",
+    next: "Далее",
+    back: "Назад",
+    reviewHint: "Проверьте введённые данные перед отправкой.",
+    statusPending: "На модерации",
+    contactsTitle: "Контакты",
+    contactsAddress: "Бишкек, Кыргызстан",
   },
   about: {
     title: "О проекте",
@@ -324,22 +386,25 @@ const ru: Dictionary = {
   },
   contacts: { title: "Контакты" },
   reels: {
-    navLabel: "🎬 Reels",
+    navLabel: "Reels",
     title: "Короткие видео",
     subtitle: "Смахивайте вверх, чтобы посмотреть ещё",
     empty: "Пока нет роликов. Загляните позже!",
     viewProfile: "Профиль турфирмы",
     muted: "Без звука — нажмите, чтобы включить",
-    tapToUnmute: "🔇 Нажмите для звука",
+    tapToUnmute: "Нажмите для звука",
   },
   dashboard: {
     nav: {
-      profile: "Профиль",
-      media: "Фото и медиа",
-      reels: "🎬 Reels",
+      home: "Главная",
+      profile: "Настройки",
+      media: "Медиа",
+      reels: "Reels",
+      reviews: "Отзывы",
       tours: "Туры",
       stats: "Статистика",
       billing: "Тариф",
+      logout: "Выйти",
     },
     status: {
       pending: "На модерации",
@@ -350,6 +415,29 @@ const ru: Dictionary = {
     pendingNotice: "Ваш профиль ещё не виден в каталоге, пока администратор не одобрит заявку.",
     rejectedNotice: "Заявка отклонена",
     blockedNotice: "Профиль заблокирован администратором и скрыт из каталога.",
+    home: {
+      title: "Главная",
+      subtitle: "Общая сводка по вашему профилю на платформе.",
+      kpiViews: "Просмотры профиля",
+      kpiReviews: "Отзывы",
+      kpiActiveTours: "Активные туры",
+      kpiTariff: "Текущий тариф",
+      chartTitle: "Динамика просмотров",
+      recentReviewsTitle: "Последние отзывы",
+      recentReviewsEmpty: "Пока нет отзывов.",
+      viewAll: "Все отзывы →",
+    },
+    chart: {
+      period7: "7 дней",
+      period30: "30 дней",
+      period90: "90 дней",
+    },
+    reviewsPage: {
+      title: "Отзывы",
+      subtitle: "Отзывы туристов о вашей компании. Модерацию спама выполняет администратор платформы.",
+      empty: "Пока нет отзывов.",
+      emptyHint: "Отзывы появятся здесь, когда туристы оставят их на странице вашего профиля.",
+    },
     profile: {
       description: "Описание компании",
       descriptionPlaceholder: "Расскажите туристам о вашей компании, опыте и турах…",
@@ -363,7 +451,7 @@ const ru: Dictionary = {
       email: "Email для связи",
       save: "Сохранить",
       saving: "Сохранение…",
-      saved: "Сохранено ✓",
+      saved: "Сохранено",
       errorGeneric: "Не удалось сохранить.",
       preview: "Предпросмотр публичной страницы →",
     },
@@ -487,6 +575,7 @@ const ky: Dictionary = {
   },
   search: {
     title: "Турфирмалар жана гиддер каталогу",
+    filtersButton: "Чыпкалар",
     searchLabel: "Издөө",
     searchPlaceholder: "Аталышы же сүрөттөмөсү",
     region: "Аймак",
@@ -500,7 +589,7 @@ const ky: Dictionary = {
     all: "Баары",
     found: "Табылды",
     empty: "Суранычыңыз боюнча эч нерсе табылган жок. Чыпкаларды өзгөртүп көрүңүз.",
-    aiTitle: "🤖 AI менен тур тандоо",
+    aiTitle: "AI менен тур тандоо",
     aiSubtitle: "Каалаган нерсеңизди сөз менен жазыңыз — Claude ылайыктуу турларды тандайт.",
     aiPlaceholder: "Мисалы: 5 күндүк трекинг, өтө оор эмес, боз үйдө түнөө менен",
     aiButton: "AI менен тандоо",
@@ -512,12 +601,14 @@ const ky: Dictionary = {
   },
   company: {
     verified: "Текшерилген",
+    priceFrom: "{price} сомдон баштап",
     about: "Компания жөнүндө",
     languages: "Тилдер",
     tourTypes: "Тур түрлөрү",
     videos: "Видео гиддер",
     pdfGuides: "PDF гиддер",
     tours: "Турлар",
+    photos: "Сүрөттөр",
     included: "Кирет",
     excluded: "Кирбейт",
     reviews: "Пикирлер",
@@ -526,6 +617,11 @@ const ky: Dictionary = {
     call: "Чалуу",
     email: "Email",
     instagram: "Instagram",
+    noPhotos: "Турфирма азырынча сүрөт жүктөгөн эмес.",
+    noVideos: "Азырынча видео гиддер жок.",
+    noPdfGuides: "Азырынча PDF гиддер жок.",
+    noTours: "Азырынча турлар кошулган эмес.",
+    noReviews: "Азырынча пикирлер жок. Биринчи болуңуз!",
     reviewFormRating: "Баа",
     reviewFormName: "Атыңыз",
     reviewFormEmail: "Email",
@@ -556,6 +652,16 @@ const ky: Dictionary = {
       "Профилиңиз модерацияга жөнөтүлдү. Администратор текшергенден кийин жеке кабинетке кире аласыз. Кирүү барагына багыттоо жүрүп жатат…",
     wrongCredentials: "Email же сырсөз туура эмес.",
     passwordMismatch: "Сырсөздөр дал келген жок.",
+    stepBasic: "Негизги",
+    stepContacts: "Байланыш",
+    stepDocs: "Документтер",
+    stepReview: "Текшерүү",
+    next: "Кийинки",
+    back: "Артка",
+    reviewHint: "Жөнөтүүдөн мурун маалыматтарды текшериңиз.",
+    statusPending: "Модерацияда",
+    contactsTitle: "Байланыш",
+    contactsAddress: "Бишкек, Кыргызстан",
   },
   about: {
     title: "Долбоор жөнүндө",
@@ -566,22 +672,25 @@ const ky: Dictionary = {
   },
   contacts: { title: "Байланыш" },
   reels: {
-    navLabel: "🎬 Reels",
+    navLabel: "Reels",
     title: "Кыска видеолор",
     subtitle: "Дагы көрүү үчүн жогору сүрүңүз",
     empty: "Азырынча видео жок. Кийинчерээк кайра келиңиз!",
     viewProfile: "Турфирманын профили",
     muted: "Үнсүз — күйгүзүү үчүн басыңыз",
-    tapToUnmute: "🔇 Үн үчүн басыңыз",
+    tapToUnmute: "Үн үчүн басыңыз",
   },
   dashboard: {
     nav: {
-      profile: "Профиль",
-      media: "Сүрөт жана медиа",
-      reels: "🎬 Reels",
+      home: "Башкы бет",
+      profile: "Жөндөөлөр",
+      media: "Медиа",
+      reels: "Reels",
+      reviews: "Пикирлер",
       tours: "Турлар",
       stats: "Статистика",
       billing: "Тариф",
+      logout: "Чыгуу",
     },
     status: {
       pending: "Текшерүүдө",
@@ -592,6 +701,29 @@ const ky: Dictionary = {
     pendingNotice: "Администратор арызды бекиткенге чейин профилиңиз каталогдо көрүнбөйт.",
     rejectedNotice: "Арыз четке кагылды",
     blockedNotice: "Профиль администратор тарабынан бөгөттөлдү жана каталогдон жашырылды.",
+    home: {
+      title: "Башкы бет",
+      subtitle: "Платформадагы профилиңиз боюнча жалпы маалымат.",
+      kpiViews: "Профиль көрүүлөрү",
+      kpiReviews: "Пикирлер",
+      kpiActiveTours: "Активдүү турлар",
+      kpiTariff: "Учурдагы тариф",
+      chartTitle: "Көрүүлөрдүн динамикасы",
+      recentReviewsTitle: "Акыркы пикирлер",
+      recentReviewsEmpty: "Азырынча пикирлер жок.",
+      viewAll: "Бардык пикирлер →",
+    },
+    chart: {
+      period7: "7 күн",
+      period30: "30 күн",
+      period90: "90 күн",
+    },
+    reviewsPage: {
+      title: "Пикирлер",
+      subtitle: "Туристтердин компанияңыз жөнүндөгү пикирлери. Спамды платформанын администратору текшерет.",
+      empty: "Азырынча пикирлер жок.",
+      emptyHint: "Туристтер профилиңиздин бетинде пикир калтырганда, алар бул жерде көрүнөт.",
+    },
     profile: {
       description: "Компания жөнүндө сүрөттөмө",
       descriptionPlaceholder: "Туристтерге компанияңыз, тажрыйбаңыз жана турларыңыз жөнүндө айтып бериңиз…",
@@ -605,7 +737,7 @@ const ky: Dictionary = {
       email: "Байланыш үчүн email",
       save: "Сактоо",
       saving: "Сакталууда…",
-      saved: "Сакталды ✓",
+      saved: "Сакталды",
       errorGeneric: "Сактоого болбоду.",
       preview: "Коомдук баракты алдын ала көрүү →",
     },
@@ -729,6 +861,7 @@ const en: Dictionary = {
   },
   search: {
     title: "Tour operators & guides catalog",
+    filtersButton: "Filters",
     searchLabel: "Search",
     searchPlaceholder: "Name or description",
     region: "Region",
@@ -742,7 +875,7 @@ const en: Dictionary = {
     all: "All",
     found: "Found",
     empty: "No results for your search. Try adjusting the filters.",
-    aiTitle: "🤖 AI tour finder",
+    aiTitle: "AI tour finder",
     aiSubtitle: "Describe what you're looking for — Claude will suggest matching tours.",
     aiPlaceholder: "e.g. a 5-day trek, not too difficult, staying in yurts",
     aiButton: "Find with AI",
@@ -754,12 +887,14 @@ const en: Dictionary = {
   },
   company: {
     verified: "Verified",
+    priceFrom: "from {price} KGS",
     about: "About",
     languages: "Languages",
     tourTypes: "Tour types",
     videos: "Video guides",
     pdfGuides: "PDF guides",
     tours: "Tours",
+    photos: "Photos",
     included: "Included",
     excluded: "Not included",
     reviews: "Reviews",
@@ -768,6 +903,11 @@ const en: Dictionary = {
     call: "Call",
     email: "Email",
     instagram: "Instagram",
+    noPhotos: "This operator hasn't uploaded any photos yet.",
+    noVideos: "No video guides yet.",
+    noPdfGuides: "No PDF guides yet.",
+    noTours: "No tours added yet.",
+    noReviews: "No reviews yet. Be the first!",
     reviewFormRating: "Rating",
     reviewFormName: "Your name",
     reviewFormEmail: "Email",
@@ -798,6 +938,16 @@ const en: Dictionary = {
       "Your profile has been sent for moderation. Once approved by an admin, you'll get access to your dashboard. Redirecting to login…",
     wrongCredentials: "Incorrect email or password.",
     passwordMismatch: "Passwords do not match.",
+    stepBasic: "Basics",
+    stepContacts: "Contacts",
+    stepDocs: "Documents",
+    stepReview: "Review",
+    next: "Next",
+    back: "Back",
+    reviewHint: "Check your details before submitting.",
+    statusPending: "Under review",
+    contactsTitle: "Contacts",
+    contactsAddress: "Bishkek, Kyrgyzstan",
   },
   about: {
     title: "About the project",
@@ -808,22 +958,25 @@ const en: Dictionary = {
   },
   contacts: { title: "Contacts" },
   reels: {
-    navLabel: "🎬 Reels",
+    navLabel: "Reels",
     title: "Short videos",
     subtitle: "Swipe up to see more",
     empty: "No videos yet. Check back soon!",
     viewProfile: "View operator profile",
     muted: "Muted — tap to unmute",
-    tapToUnmute: "🔇 Tap for sound",
+    tapToUnmute: "Tap for sound",
   },
   dashboard: {
     nav: {
-      profile: "Profile",
-      media: "Photos & media",
-      reels: "🎬 Reels",
+      home: "Home",
+      profile: "Settings",
+      media: "Media",
+      reels: "Reels",
+      reviews: "Reviews",
       tours: "Tours",
       stats: "Stats",
       billing: "Plan",
+      logout: "Log out",
     },
     status: {
       pending: "Under review",
@@ -834,6 +987,29 @@ const en: Dictionary = {
     pendingNotice: "Your profile isn't visible in the catalog yet until an admin approves your application.",
     rejectedNotice: "Application rejected",
     blockedNotice: "Your profile has been blocked by an admin and hidden from the catalog.",
+    home: {
+      title: "Home",
+      subtitle: "An overview of your profile on the platform.",
+      kpiViews: "Profile views",
+      kpiReviews: "Reviews",
+      kpiActiveTours: "Active tours",
+      kpiTariff: "Current plan",
+      chartTitle: "Views over time",
+      recentReviewsTitle: "Recent reviews",
+      recentReviewsEmpty: "No reviews yet.",
+      viewAll: "All reviews →",
+    },
+    chart: {
+      period7: "7 days",
+      period30: "30 days",
+      period90: "90 days",
+    },
+    reviewsPage: {
+      title: "Reviews",
+      subtitle: "What tourists are saying about your company. Spam moderation is handled by the platform admin.",
+      empty: "No reviews yet.",
+      emptyHint: "Reviews will appear here once tourists leave them on your public profile page.",
+    },
     profile: {
       description: "Company description",
       descriptionPlaceholder: "Tell tourists about your company, experience, and tours…",
@@ -847,7 +1023,7 @@ const en: Dictionary = {
       email: "Contact email",
       save: "Save",
       saving: "Saving…",
-      saved: "Saved ✓",
+      saved: "Saved",
       errorGeneric: "Couldn't save.",
       preview: "Preview public page →",
     },

@@ -2,6 +2,9 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { Star, CheckCircle2, AlertCircle, PenLine } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Input, Textarea } from "@/components/ui/Input";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 
 export function ReviewForm({ companyId, dict }: { companyId: string; dict: Dictionary["company"] }) {
@@ -37,74 +40,67 @@ export function ReviewForm({ companyId, dict }: { companyId: string; dict: Dicti
   }
 
   if (done) {
-    return <p className="text-sm text-green-700">{dict.reviewThanks}</p>;
+    return (
+      <p className="flex items-center gap-2 rounded-md bg-green-50 px-4 py-3 text-sm text-success">
+        <CheckCircle2 className="size-4" aria-hidden />
+        {dict.reviewThanks}
+      </p>
+    );
   }
 
   if (!open) {
     return (
-      <button
-        onClick={() => setOpen(true)}
-        className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50"
-      >
+      <Button variant="outline" icon={<PenLine className="size-4" />} onClick={() => setOpen(true)}>
         {dict.leaveReview}
-      </button>
+      </Button>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md space-y-3 rounded-lg border border-gray-200 p-4">
+    <form onSubmit={handleSubmit} className="max-w-lg space-y-4 rounded-card border border-line bg-white p-5 shadow-card">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">{dict.reviewFormRating}</label>
-        <div className="flex gap-1 text-2xl text-amber-500">
+        <p className="mb-1.5 text-sm font-medium text-ink">{dict.reviewFormRating}</p>
+        <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((i) => (
             <button
               type="button"
               key={i}
               onClick={() => setRating(i)}
               aria-label={`${i} / 5`}
-              className="leading-none"
+              aria-pressed={i <= rating}
+              className="focus-ring rounded p-0.5 transition-transform active:scale-90"
             >
-              {i <= rating ? "★" : "☆"}
+              <Star
+                className={`size-7 ${i <= rating ? "fill-amber-400 text-amber-400" : "fill-transparent text-gray-300"}`}
+              />
             </button>
           ))}
         </div>
       </div>
-      <input
-        value={authorName}
-        onChange={(e) => setAuthorName(e.target.value)}
-        placeholder={dict.reviewFormName}
-        required
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-      />
-      <input
+      <Input label={dict.reviewFormName} value={authorName} onChange={(e) => setAuthorName(e.target.value)} required />
+      <Input
         type="email"
+        label={dict.reviewFormEmail}
         value={authorEmail}
         onChange={(e) => setAuthorEmail(e.target.value)}
-        placeholder={dict.reviewFormEmail}
         required
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
       />
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder={dict.reviewFormText}
-        rows={3}
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-      />
+      <Textarea label={dict.reviewFormText} value={text} onChange={(e) => setText(e.target.value)} rows={3} />
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && (
+        <p role="alert" className="flex items-center gap-1.5 text-sm text-danger">
+          <AlertCircle className="size-4" aria-hidden />
+          {error}
+        </p>
+      )}
 
-      <div className="flex gap-3">
-        <button
-          type="submit"
-          disabled={saving}
-          className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50"
-        >
-          {saving ? "…" : dict.reviewFormSubmit}
-        </button>
-        <button type="button" onClick={() => setOpen(false)} className="rounded-md border border-gray-300 px-4 py-2 text-sm">
+      <div className="flex gap-2">
+        <Button type="submit" loading={saving}>
+          {dict.reviewFormSubmit}
+        </Button>
+        <Button type="button" variant="outline" onClick={() => setOpen(false)}>
           {dict.reviewFormCancel}
-        </button>
+        </Button>
       </div>
     </form>
   );

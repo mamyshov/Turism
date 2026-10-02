@@ -1,10 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { CompanyCard } from "@/components/CompanyCard";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { SearchX } from "lucide-react";
 import type { Prisma } from "@prisma/client";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/dictionary";
 import { localizedRegions, localizedCategories, localizedLanguages } from "@/lib/i18n/constant-labels";
 import { AiTourSearch } from "./AiTourSearch";
+import { SearchFilters } from "./SearchFilters";
+import { MobileFiltersDrawer } from "./MobileFiltersDrawer";
 
 const TARIFF_ORDER: Record<string, number> = { PRO: 0, STANDARD: 1, BASIC: 2 };
 
@@ -48,6 +52,7 @@ async function getCompanies(params: SearchParams) {
     include: {
       photos: { orderBy: { order: "asc" }, take: 1 },
       reviews: { select: { rating: true } },
+      tours: { select: { price: true }, orderBy: { price: "asc" }, take: 1 },
     },
   });
 
@@ -67,63 +72,34 @@ export default async function SearchPage({
   const languages = localizedLanguages(locale);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-2xl font-bold mb-6">{dict.title}</h1>
+    <div className="mx-auto max-w-container px-4 py-8 sm:px-6 sm:py-10">
+      <h1 className="text-2xl font-bold text-ink">{dict.title}</h1>
 
-      <AiTourSearch dict={dict} locale={locale} />
+      <div className="mt-6">
+        <AiTourSearch dict={dict} locale={locale} />
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
-        <form className="space-y-6 rounded-xl border border-gray-200 bg-white p-5 h-fit">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{dict.searchLabel}</label>
-            <input
-              name="q"
-              defaultValue={searchParams.q}
-              placeholder={dict.searchPlaceholder}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            />
-          </div>
+      <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr]">
+        <aside className="hidden h-fit rounded-card border border-line bg-white p-5 lg:block">
+          <SearchFilters dict={dict} regions={regions} categories={categories} languages={languages} searchParams={searchParams} idPrefix="desktop" />
+        </aside>
 
-          <Select label={dict.region} allLabel={dict.all} name="region" options={regions} defaultValue={searchParams.region} />
-          <Select label={dict.category} allLabel={dict.all} name="category" options={categories} defaultValue={searchParams.category} />
-          <Select label={dict.language} allLabel={dict.all} name="language" options={languages} defaultValue={searchParams.language} />
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{dict.price}</label>
-            <div className="flex gap-2">
-              <input
-                name="minPrice"
-                type="number"
-                min={0}
-                placeholder={dict.from}
-                defaultValue={searchParams.minPrice}
-                className="w-1/2 rounded-md border border-gray-300 px-3 py-2 text-sm"
-              />
-              <input
-                name="maxPrice"
-                type="number"
-                min={0}
-                placeholder={dict.to}
-                defaultValue={searchParams.maxPrice}
-                className="w-1/2 rounded-md border border-gray-300 px-3 py-2 text-sm"
-              />
+        <div>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <p className="text-sm text-ink-secondary">
+              {dict.found}: <span className="font-medium text-ink">{companies.length}</span>
+            </p>
+            <div className="lg:hidden">
+              <MobileFiltersDrawer label={dict.filtersButton} title={dict.filtersButton}>
+                <SearchFilters dict={dict} regions={regions} categories={categories} languages={languages} searchParams={searchParams} idPrefix="mobile" />
+              </MobileFiltersDrawer>
             </div>
           </div>
 
-          <button className="w-full rounded-md bg-brand-600 py-2 text-sm font-medium text-white hover:bg-brand-700">
-            {dict.apply}
-          </button>
-          <a href="/search" className="block text-center text-sm text-gray-500 hover:text-brand-700">
-            {dict.reset}
-          </a>
-        </form>
-
-        <div>
-          <p className="mb-4 text-sm text-gray-500">{dict.found}: {companies.length}</p>
           {companies.length === 0 ? (
-            <p className="text-gray-500">{dict.empty}</p>
+            <EmptyState icon={SearchX} title={dict.empty} />
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {companies.map((company) => (
                 <CompanyCard key={company.id} company={company} locale={locale} />
               ))}
@@ -131,36 +107,6 @@ export default async function SearchPage({
           )}
         </div>
       </div>
-    </div>
-  );
-}
-
-function Select({
-  label,
-  allLabel,
-  name,
-  options,
-  defaultValue,
-}: {
-  label: string;
-  allLabel: string;
-  name: string;
-  options: { key: string; label: string }[];
-  defaultValue?: string;
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-      <select
-        name={name}
-        defaultValue={defaultValue ?? ""}
-        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm bg-white"
-      >
-        <option value="">{allLabel}</option>
-        {options.map((o) => (
-          <option key={o.key} value={o.key}>{o.label}</option>
-        ))}
-      </select>
     </div>
   );
 }

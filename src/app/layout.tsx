@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/dictionary";
+
+const inter = Inter({
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -24,8 +31,8 @@ export default function RootLayout({
   const dict = getDictionary(locale);
 
   return (
-    <html lang={locale}>
-      <body className="min-h-screen flex flex-col">
+    <html lang={locale} className={inter.variable}>
+      <body className="min-h-screen flex flex-col font-sans">
         <Providers>
           <Navbar locale={locale} dict={dict.nav} reelsLabel={dict.reels.navLabel} />
           <main className="flex-1">{children}</main>

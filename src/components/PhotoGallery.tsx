@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function PhotoGallery({
   photos,
@@ -14,10 +15,10 @@ export function PhotoGallery({
 
   return (
     <div>
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-gray-100">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-card bg-gray-100 sm:aspect-[16/9]">
         <Image
           src={photos[active].url}
-          alt={`Фото ${active + 1} — ${companyName}`}
+          alt={`${companyName} — ${active + 1}/${photos.length}`}
           fill
           className="object-cover"
           sizes="(min-width: 1024px) 800px, 100vw"
@@ -27,29 +28,31 @@ export function PhotoGallery({
           <>
             <button
               onClick={() => setActive((i) => (i - 1 + photos.length) % photos.length)}
-              aria-label="Предыдущее фото"
-              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 text-white hover:bg-black/60"
+              aria-label="Previous photo"
+              className="focus-ring absolute left-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm hover:bg-white active:scale-95"
             >
-              ‹
+              <ChevronLeft className="size-5" />
             </button>
             <button
               onClick={() => setActive((i) => (i + 1) % photos.length)}
-              aria-label="Следующее фото"
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 text-white hover:bg-black/60"
+              aria-label="Next photo"
+              className="focus-ring absolute right-3 top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm hover:bg-white active:scale-95"
             >
-              ›
+              <ChevronRight className="size-5" />
             </button>
           </>
         )}
       </div>
 
       {photos.length > 1 && (
-        <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+        <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto pb-1">
           {photos.map((photo, i) => (
             <button
               key={photo.id}
               onClick={() => setActive(i)}
-              className={`relative h-16 w-24 flex-none overflow-hidden rounded-md ${
+              aria-label={`Photo ${i + 1}`}
+              aria-current={i === active}
+              className={`focus-ring relative h-16 w-24 flex-none overflow-hidden rounded-sm ${
                 i === active ? "ring-2 ring-brand-600" : "opacity-70 hover:opacity-100"
               }`}
             >

@@ -4,8 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { fromJsonArray } from "@/lib/json";
 import { computeRating } from "@/lib/rating";
 import { trackCompanyView } from "@/lib/track-view";
+import Image from "next/image";
+import { MapPin, ShieldCheck, FileText, Download } from "lucide-react";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import { StarRating } from "@/components/StarRating";
+import { CompanyTabs, type CompanyTabPanel } from "@/components/company/CompanyTabs";
+import { ContactButtons, MobileContactBar } from "@/components/company/ContactButtons";
+import { ReviewCard } from "@/components/reviews/ReviewCard";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Badge } from "@/components/ui/Badge";
 import { ReviewForm } from "./ReviewForm";
 import { getLocale } from "@/lib/i18n/get-locale";
 import type { Locale } from "@/lib/i18n/locales";
@@ -13,6 +20,7 @@ import { getDictionary } from "@/lib/i18n/dictionary";
 import { localizeLanguage, localizeCategory, localizeRegion } from "@/lib/i18n/constant-labels";
 
 const INTL_LOCALE: Record<Locale, string> = { ru: "ru-RU", ky: "ky-KG", en: "en-US" };
+const CURRENCY: Record<Locale, string> = { ru: "сом", ky: "сом", en: "KGS" };
 
 async function getCompany(slug: string) {
   const company = await prisma.company.findUnique({
@@ -51,218 +59,228 @@ export default async function CompanyPage({ params }: { params: { slug: string }
   trackCompanyView(company.id).catch(() => {});
 
   const locale = getLocale();
-  const dict = getDictionary(locale).company;
+  const fullDict = getDictionary(locale);
+  const dict = fullDict.company;
+  const tourDict = fullDict.dashboard.tours;
   const intlLocale = INTL_LOCALE[locale];
 
   const languages = fromJsonArray(company.languages);
   const categories = fromJsonArray(company.categories);
   const rating = computeRating(company.reviews);
+  const cover = company.photos[0]?.url;
 
-  return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-bold">{company.name}</h1>
-            {company.tariff === "PRO" && (
-              <span className="rounded-full bg-brand-600 px-2.5 py-1 text-xs font-medium text-white">
-                ✓ {dict.verified}
-              </span>
-            )}
+  const toursPanel = company.tours.length === 0 ? (
+    <EmptyState title={dict.noTours} />
+  ) : (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {company.tours.map((tour) => (
+        <div key={tour.id} id={`tour-${tour.id}`} className="scroll-mt-24 rounded-card border border-line bg-white p-5 shadow-card">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-balance-wrap font-semibold text-ink">{tour.title}</h3>
+            <span className="whitespace-nowrap font-semibold text-brand-700">
+              {tour.price.toLocaleString(intlLocale)} {CURRENCY[locale]}
+            </span>
           </div>
-          <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-gray-500">
-            {company.region && <p>📍 {localizeRegion(company.region, locale)}</p>}
-            {rating.count > 0 && (
-              <p className="flex items-center gap-1.5">
-                <StarRating value={rating.average} />
-                <span className="text-sm">{rating.average} ({rating.count})</span>
-              </p>
-            )}
-          </div>
-        </div>
-
-        <ContactButtons company={company} dict={dict} />
-      </div>
-
-      {company.photos.length > 0 && (
-        <div className="mt-8">
-          <PhotoGallery photos={company.photos} companyName={company.name} />
-        </div>
-      )}
-
-      {company.description && (
-        <div className="mt-8 max-w-3xl">
-          <h2 className="text-lg font-semibold mb-2">{dict.about}</h2>
-          <p className="whitespace-pre-line text-gray-700">{company.description}</p>
-        </div>
-      )}
-
-      {(languages.length > 0 || categories.length > 0) && (
-        <div className="mt-6 flex flex-wrap gap-6 text-sm">
-          {languages.length > 0 && (
-            <div>
-              <span className="font-medium text-gray-700">{dict.languages}: </span>
-              {languages.map((l) => localizeLanguage(l, locale)).join(", ")}
-            </div>
+          <p className="mt-1 text-sm text-ink-secondary">
+            {[
+              tour.durationDays ? `${tour.durationDays} ${tourDict.daysSuffix}` : null,
+              tour.durationHours ? `${tour.durationHours} ${tourDict.hoursSuffix}` : null,
+              tour.maxPeople ? tourDict.maxPeopleSuffix.replace("{n}", String(tour.maxPeople)) : null,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
+          {tour.description && (
+            <p className="mt-2 whitespace-pre-line text-sm text-ink-secondary">{tour.description}</p>
           )}
-          {categories.length > 0 && (
-            <div>
-              <span className="font-medium text-gray-700">{dict.tourTypes}: </span>
-              {categories.map((c) => localizeCategory(c, locale)).join(", ")}
-            </div>
+          {tour.included && (
+            <p className="mt-3 text-sm">
+              <span className="font-medium text-success">{dict.included}: </span>
+              {tour.included}
+            </p>
+          )}
+          {tour.excluded && (
+            <p className="mt-1 text-sm">
+              <span className="font-medium text-danger">{dict.excluded}: </span>
+              {tour.excluded}
+            </p>
           )}
         </div>
-      )}
-
-      {company.videos.length > 0 && (
-        <div className="mt-10">
-          <h2 className="text-lg font-semibold mb-3">{dict.videos}</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {company.videos.map((video) => (
-              <div key={video.id} className="aspect-video overflow-hidden rounded-lg bg-black">
-                {video.type === "EMBED" ? (
-                  <iframe
-                    src={video.url}
-                    title={video.title ?? dict.videos}
-                    className="h-full w-full"
-                    allowFullScreen
-                  />
-                ) : (
-                  <video src={video.url} controls className="h-full w-full" />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {company.pdfGuides.length > 0 && (
-        <div className="mt-10">
-          <h2 className="text-lg font-semibold mb-3">{dict.pdfGuides}</h2>
-          <ul className="space-y-2">
-            {company.pdfGuides.map((pdf) => (
-              <li key={pdf.id}>
-                <a
-                  href={pdf.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-brand-700 hover:underline"
-                >
-                  📄 {pdf.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {company.tours.length > 0 && (
-        <div className="mt-10">
-          <h2 className="text-lg font-semibold mb-4">{dict.tours}</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {company.tours.map((tour) => (
-              <div key={tour.id} id={`tour-${tour.id}`} className="scroll-mt-20 rounded-lg border border-gray-200 p-4">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-semibold">{tour.title}</h3>
-                  <span className="whitespace-nowrap font-semibold text-brand-700">
-                    {tour.price.toLocaleString(intlLocale)} сом
-                  </span>
-                </div>
-                <p className="mt-1 text-sm text-gray-500">
-                  {[
-                    tour.durationDays ? `${tour.durationDays} дн.` : null,
-                    tour.durationHours ? `${tour.durationHours} ч.` : null,
-                    tour.maxPeople ? `до ${tour.maxPeople} чел.` : null,
-                  ]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </p>
-                {tour.description && (
-                  <p className="mt-2 text-sm text-gray-700 whitespace-pre-line">{tour.description}</p>
-                )}
-                {tour.included && (
-                  <p className="mt-2 text-sm"><span className="font-medium text-green-700">{dict.included}: </span>{tour.included}</p>
-                )}
-                {tour.excluded && (
-                  <p className="mt-1 text-sm"><span className="font-medium text-red-700">{dict.excluded}: </span>{tour.excluded}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="mt-10">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">
-            {dict.reviews} {rating.count > 0 && <span className="text-gray-400">({rating.count})</span>}
-          </h2>
-        </div>
-
-        <div className="mb-6">
-          <ReviewForm companyId={company.id} dict={dict} />
-        </div>
-
-        {company.reviews.length > 0 && (
-          <div className="space-y-4">
-            {company.reviews.map((review) => (
-              <div key={review.id} className="rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">{review.authorName}</span>
-                  <StarRating value={review.rating} size="sm" />
-                </div>
-                {review.text && <p className="mt-2 text-sm text-gray-700 whitespace-pre-line">{review.text}</p>}
-                <p className="mt-2 text-xs text-gray-400">
-                  {review.createdAt.toLocaleDateString(intlLocale)}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      ))}
     </div>
   );
-}
 
-function ContactButtons({
-  company,
-  dict,
-}: {
-  company: { phone: string | null; whatsapp: string | null; instagram: string | null; contactEmail: string | null };
-  dict: { whatsapp: string; call: string; email: string; instagram: string };
-}) {
+  const photosPanel =
+    company.photos.length === 0 ? (
+      <EmptyState title={dict.noPhotos} />
+    ) : (
+      <PhotoGallery photos={company.photos} companyName={company.name} />
+    );
+
+  const videosPanel =
+    company.videos.length === 0 ? (
+      <EmptyState title={dict.noVideos} />
+    ) : (
+      <div className="grid gap-4 sm:grid-cols-2">
+        {company.videos.map((video) => (
+          <div key={video.id} className="aspect-video overflow-hidden rounded-card bg-black">
+            {video.type === "EMBED" ? (
+              <iframe src={video.url} title={video.title ?? dict.videos} className="h-full w-full" allowFullScreen />
+            ) : (
+              <video src={video.url} controls className="h-full w-full" />
+            )}
+          </div>
+        ))}
+      </div>
+    );
+
+  const pdfPanel =
+    company.pdfGuides.length === 0 ? (
+      <EmptyState title={dict.noPdfGuides} />
+    ) : (
+      <ul className="grid gap-3 sm:grid-cols-2">
+        {company.pdfGuides.map((pdf) => (
+          <li key={pdf.id}>
+            <a
+              href={pdf.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring flex items-center gap-3 rounded-card border border-line bg-white p-4 shadow-card transition-colors hover:border-brand-400"
+            >
+              <span className="flex size-10 flex-none items-center justify-center rounded-md bg-brand-50 text-brand-700">
+                <FileText className="size-5" aria-hidden />
+              </span>
+              <span className="text-balance-wrap flex-1 text-sm font-medium text-ink">{pdf.title}</span>
+              <Download className="size-4 flex-none text-ink-muted" aria-hidden />
+            </a>
+          </li>
+        ))}
+      </ul>
+    );
+
+  const reviewsPanel = (
+    <div className="space-y-6">
+      <ReviewForm companyId={company.id} dict={dict} />
+      {company.reviews.length === 0 ? (
+        <EmptyState title={dict.noReviews} />
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {company.reviews.map((review) => (
+            <ReviewCard
+              key={review.id}
+              authorName={review.authorName}
+              rating={review.rating}
+              text={review.text}
+              createdAt={review.createdAt}
+              locale={locale}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  const panels: CompanyTabPanel[] = [
+    { key: "tours", label: dict.tours, count: company.tours.length, content: toursPanel },
+    { key: "photos", label: dict.photos, count: company.photos.length, content: photosPanel },
+    { key: "videos", label: dict.videos, count: company.videos.length, content: videosPanel },
+    { key: "pdf", label: dict.pdfGuides, count: company.pdfGuides.length, content: pdfPanel },
+    { key: "reviews", label: dict.reviews, count: company.reviews.length, content: reviewsPanel },
+  ];
+
   return (
-    <div className="flex flex-wrap gap-2">
-      {company.whatsapp && (
-        <a
-          href={`https://wa.me/${company.whatsapp.replace(/\D/g, "")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
-        >
-          {dict.whatsapp}
-        </a>
-      )}
-      {company.phone && (
-        <a href={`tel:${company.phone}`} className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50">
-          📞 {dict.call}
-        </a>
-      )}
-      {company.contactEmail && (
-        <a href={`mailto:${company.contactEmail}`} className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50">
-          ✉️ {dict.email}
-        </a>
-      )}
-      {company.instagram && (
-        <a
-          href={`https://instagram.com/${company.instagram.replace("@", "")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50"
-        >
-          {dict.instagram}
-        </a>
-      )}
+    <div className="pb-24 md:pb-0">
+      <div className="relative h-48 w-full bg-gradient-to-br from-brand-800 to-brand-600 sm:h-64 lg:h-80">
+        {cover && (
+          <Image src={cover} alt={company.name} fill priority className="object-cover" sizes="100vw" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+      </div>
+
+      <div className="mx-auto max-w-container px-4 sm:px-6">
+        <div className="-mt-10 flex flex-col gap-4 sm:-mt-12 md:flex-row md:items-end md:justify-between">
+          <div className="flex items-end gap-4">
+            <div
+              aria-hidden
+              className="flex size-20 flex-none items-center justify-center rounded-card border-4 border-white bg-brand-600 text-3xl font-bold text-white shadow-card sm:size-24"
+            >
+              {company.name.charAt(0).toUpperCase()}
+            </div>
+            <div className="min-w-0 pb-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-balance-wrap text-2xl font-bold text-ink sm:text-3xl">{company.name}</h1>
+                {company.tariff === "PRO" && (
+                  <Badge tone="brand" icon={<ShieldCheck className="size-3.5" aria-hidden />}>
+                    {dict.verified}
+                  </Badge>
+                )}
+              </div>
+              <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-secondary">
+                {company.region && (
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin className="size-4 text-ink-muted" aria-hidden />
+                    {localizeRegion(company.region, locale)}
+                  </span>
+                )}
+                {rating.count > 0 && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <StarRating value={rating.average} />
+                    {rating.average} ({rating.count})
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="hidden md:block">
+            <ContactButtons company={company} dict={dict} />
+          </div>
+        </div>
+
+        <div className="mt-4 md:hidden">
+          <ContactButtons company={company} dict={dict} />
+        </div>
+
+        <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px]">
+          <div>
+            {company.description && (
+              <section>
+                <h2 className="mb-2 text-lg font-semibold text-ink">{dict.about}</h2>
+                <p className="whitespace-pre-line text-ink-secondary">{company.description}</p>
+              </section>
+            )}
+          </div>
+          {(languages.length > 0 || categories.length > 0) && (
+            <aside className="h-fit space-y-4 rounded-card border border-line bg-white p-5 text-sm shadow-card">
+              {languages.length > 0 && (
+                <div>
+                  <p className="font-medium text-ink">{dict.languages}</p>
+                  <p className="mt-1 text-ink-secondary">
+                    {languages.map((l) => localizeLanguage(l, locale)).join(", ")}
+                  </p>
+                </div>
+              )}
+              {categories.length > 0 && (
+                <div>
+                  <p className="font-medium text-ink">{dict.tourTypes}</p>
+                  <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    {categories.map((c) => (
+                      <Badge key={c} tone="brand">
+                        {localizeCategory(c, locale)}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </aside>
+          )}
+        </div>
+
+        <div className="mt-10">
+          <CompanyTabs panels={panels} />
+        </div>
+      </div>
+
+      <MobileContactBar company={company} dict={dict} />
     </div>
   );
 }

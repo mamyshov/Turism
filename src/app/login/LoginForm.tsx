@@ -4,6 +4,9 @@ import { useState, FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 
 export function LoginForm({ dict }: { dict: Dictionary["auth"] }) {
@@ -29,50 +32,44 @@ export function LoginForm({ dict }: { dict: Dictionary["auth"] }) {
       setError(dict.wrongCredentials);
       return;
     }
-    router.push(searchParams.get("callbackUrl") ?? "/dashboard/profile");
+    router.push(searchParams.get("callbackUrl") ?? "/dashboard");
     router.refresh();
   }
 
   return (
-    <div className="mx-auto max-w-sm px-4 py-16">
-      <h1 className="text-2xl font-bold">{dict.loginTitle}</h1>
-      <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">{dict.email}</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">{dict.password}</label>
-          <input
+    <div className="mx-auto max-w-sm px-4 py-12 sm:py-16">
+      <div className="rounded-card border border-line bg-white p-6 shadow-card sm:p-8">
+        <h1 className="text-2xl font-bold text-ink">{dict.loginTitle}</h1>
+        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+          <Input id="email" name="email" type="email" label={dict.email} required autoComplete="email" />
+          <Input
             id="password"
             name="password"
             type="password"
+            label={dict.password}
             required
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            autoComplete="current-password"
           />
-        </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && (
+            <p role="alert" className="flex items-center gap-1.5 text-sm text-danger">
+              <AlertCircle className="size-4" aria-hidden />
+              {error}
+            </p>
+          )}
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full rounded-md bg-brand-600 py-2.5 font-medium text-white hover:bg-brand-700 disabled:opacity-50"
-        >
-          {submitting ? "…" : dict.loginButton}
-        </button>
+          <Button type="submit" size="lg" fullWidth loading={submitting}>
+            {dict.loginButton}
+          </Button>
 
-        <p className="text-center text-sm text-gray-500">
-          {dict.noAccount}{" "}
-          <Link href="/register" className="text-brand-700 font-medium">{dict.registerButton}</Link>
-        </p>
-      </form>
+          <p className="text-center text-sm text-ink-secondary">
+            {dict.noAccount}{" "}
+            <Link href="/register" className="focus-ring rounded font-medium text-brand-700 hover:underline">
+              {dict.registerButton}
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }
