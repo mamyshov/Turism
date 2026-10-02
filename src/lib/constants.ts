@@ -70,6 +70,7 @@ export const MAX_PHOTOS_BY_TARIFF: Record<string, number> = {
   PRO: 15,
 };
 
+export const MAX_PHOTOS_PER_TOUR = 8;
 export const MAX_PHOTO_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
 export const MAX_VIDEO_SIZE_BYTES = 200 * 1024 * 1024; // 200 MB
 export const MAX_PDF_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB

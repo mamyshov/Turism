@@ -30,7 +30,7 @@ async function getCompany(slug: string) {
     where: { slug },
     include: {
       photos: { orderBy: { order: "asc" } },
-      tours: { orderBy: { createdAt: "asc" } },
+      tours: { orderBy: { createdAt: "asc" }, include: { photos: { orderBy: { order: "asc" }, take: 1 } } },
       videos: true,
       pdfGuides: true,
       reviews: { orderBy: { createdAt: "desc" } },
@@ -77,7 +77,19 @@ export default async function CompanyPage({ params }: { params: { slug: string }
   ) : (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {company.tours.map((tour) => (
-        <div key={tour.id} id={`tour-${tour.id}`} className="scroll-mt-24 rounded-card border border-line bg-white p-5 shadow-card">
+        <div key={tour.id} id={`tour-${tour.id}`} className="scroll-mt-24 overflow-hidden rounded-card border border-line bg-white shadow-card">
+          {(tour.photos[0]?.url ?? company.photos[0]?.url) && (
+            <Link href={`/tour/${tour.id}`} className="focus-ring relative block aspect-[16/9] w-full bg-gray-100" aria-label={tour.title}>
+              <Image
+                src={(tour.photos[0]?.url ?? company.photos[0]?.url) as string}
+                alt={tour.title}
+                fill
+                className="object-cover"
+                sizes="(min-width: 768px) 50vw, 100vw"
+              />
+            </Link>
+          )}
+          <div className="p-5">
           <div className="flex items-start justify-between gap-3">
             <h3 className="text-balance-wrap font-semibold text-ink">
               <Link href={`/tour/${tour.id}`} className="focus-ring rounded hover:text-brand-700 hover:underline">
@@ -112,6 +124,7 @@ export default async function CompanyPage({ params }: { params: { slug: string }
               {tour.excluded}
             </p>
           )}
+          </div>
         </div>
       ))}
     </div>

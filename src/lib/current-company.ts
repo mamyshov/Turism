@@ -18,7 +18,7 @@ export async function requireCurrentCompany() {
     where: { id: session.user.companyId },
     include: {
       photos: { orderBy: { order: "asc" } },
-      tours: { orderBy: { createdAt: "desc" } },
+      tours: { orderBy: { createdAt: "desc" }, include: { photos: { orderBy: { order: "asc" } } } },
       videos: true,
       pdfGuides: true,
       reels: { orderBy: { createdAt: "desc" }, include: { _count: { select: { likes: true } } } },

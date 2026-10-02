@@ -224,6 +224,20 @@ async function main() {
       },
     });
 
+    const dbTours = await prisma.tour.findMany({ where: { companyId: company.id }, include: { _count: { select: { photos: true } } } });
+    for (const [idx, def] of c.tours.entries()) {
+      const dbTour = dbTours.find((t) => t.title === def.title);
+      if (dbTour && dbTour._count.photos === 0) {
+        await prisma.tourPhoto.createMany({
+          data: [1, 2].map((n, i) => ({
+            tourId: dbTour.id,
+            url: `/images/demo/t-${c.photoSet}-${idx}-${n}.jpg`,
+            order: i,
+          })),
+        });
+      }
+    }
+
     const existing = await prisma.photo.count({ where: { companyId: company.id } });
     if (existing === 0) {
       await prisma.photo.createMany({

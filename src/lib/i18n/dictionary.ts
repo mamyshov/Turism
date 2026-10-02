@@ -276,6 +276,15 @@ export type Dictionary = {
       empty: string;
       durationLabel: string;
       actionsLabel: string;
+      photosButton: string;
+      photosTitle: string;
+      photosHint: string;
+      photosAdd: string;
+      photosUploading: string;
+      photosDelete: string;
+      photosLimit: string;
+      photosError: string;
+      done: string;
       errorGeneric: string;
     };
     stats: {
@@ -581,6 +590,15 @@ const ru: Dictionary = {
       empty: "Пока нет туров. Добавьте первый — он появится на странице вашего профиля.",
       durationLabel: "Длительность",
       actionsLabel: "Действия",
+      photosButton: "Фото",
+      photosTitle: "Фото тура",
+      photosHint: "JPG, PNG или WEBP, до 5 МБ. Первое фото — обложка тура. До {limit} фото.",
+      photosAdd: "Добавить фото",
+      photosUploading: "Загрузка…",
+      photosDelete: "Удалить фото",
+      photosLimit: "Достигнут лимит фото ({limit}).",
+      photosError: "Не удалось загрузить фото.",
+      done: "Готово",
       errorGeneric: "Не удалось добавить тур.",
     },
     stats: {
@@ -902,6 +920,15 @@ const ky: Dictionary = {
       empty: "Азырынча турлар жок. Биринчисин кошуңуз — ал профилиңиздин бетинде көрүнөт.",
       durationLabel: "Узактыгы",
       actionsLabel: "Аракеттер",
+      photosButton: "Сүрөт",
+      photosTitle: "Турдун сүрөттөрү",
+      photosHint: "JPG, PNG же WEBP, 5 МБга чейин. Биринчи сүрөт — турдун мукабасы. {limit} сүрөткө чейин.",
+      photosAdd: "Сүрөт кошуу",
+      photosUploading: "Жүктөлүүдө…",
+      photosDelete: "Сүрөттү өчүрүү",
+      photosLimit: "Сүрөт лимитине жеттиңиз ({limit}).",
+      photosError: "Сүрөттү жүктөөгө болбоду.",
+      done: "Даяр",
       errorGeneric: "Турду кошууга болбоду.",
     },
     stats: {
@@ -1223,6 +1250,15 @@ const en: Dictionary = {
       empty: "No tours yet. Add your first one — it will appear on your profile page.",
       durationLabel: "Duration",
       actionsLabel: "Actions",
+      photosButton: "Photos",
+      photosTitle: "Tour photos",
+      photosHint: "JPG, PNG or WEBP, up to 5 MB. The first photo is the cover. Up to {limit} photos.",
+      photosAdd: "Add photo",
+      photosUploading: "Uploading…",
+      photosDelete: "Delete photo",
+      photosLimit: "Photo limit reached ({limit}).",
+      photosError: "Couldn't upload the photo.",
+      done: "Done",
       errorGeneric: "Couldn't add the tour.",
     },
     stats: {

@@ -173,6 +173,25 @@ const JOBS = [
   ["arslanbob-1", "peaks", 91, "day"], ["arslanbob-2", "steppe", 92, "clear"], ["arslanbob-3", "peaks", 93, "golden"],
 ];
 
+// Per-tour photos: [companyPhotoSet, tourIndex, [[kind, palette], [kind, palette]]]
+const TOURS = [
+  ["issyk-kul", 0, [["peaks", "clear"], ["lake", "day"]]],
+  ["osh", 0, [["steppe", "golden"], ["canyon", "canyon"]]],
+  ["naryn", 0, [["steppe", "day"], ["lake", "golden"]]],
+  ["ala-archa", 0, [["peaks", "clear"], ["peaks", "winter"]]],
+  ["ala-archa", 1, [["peaks", "day"], ["lake", "clear"]]],
+  ["song-kol", 0, [["steppe", "golden"], ["lake", "golden"]]],
+  ["song-kol", 1, [["lake", "golden"], ["steppe", "day"]]],
+  ["skazka", 0, [["canyon", "canyon"], ["lake", "day"]]],
+  ["skazka", 1, [["canyon", "golden"], ["canyon", "canyon"]]],
+  ["karakol", 0, [["winter", "winter"], ["winter", "winter"]]],
+  ["karakol", 1, [["winter", "winter"], ["peaks", "winter"]]],
+  ["arslanbob", 0, [["peaks", "day"], ["steppe", "clear"]]],
+];
+TOURS.forEach(([set, idx, imgs], t) =>
+  imgs.forEach(([kind, pal], n) => JOBS.push([`t-${set}-${idx}-${n + 1}`, kind, 1000 + t * 10 + n, pal]))
+);
+
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
   const browser = await chromium.launch({ args: ["--no-sandbox"] });

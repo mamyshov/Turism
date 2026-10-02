@@ -2,12 +2,14 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, AlertCircle, Map } from "lucide-react";
+import Image from "next/image";
+import { Plus, Trash2, AlertCircle, Map, ImagePlus } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input, Textarea } from "@/components/ui/Input";
 import { EmptyState } from "@/components/ui/EmptyState";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 import type { Locale } from "@/lib/i18n/locales";
+import { TourPhotosModal } from "./TourPhotos";
 
 type Tour = {
   id: string;
@@ -19,6 +21,7 @@ type Tour = {
   maxPeople: number | null;
   included: string | null;
   excluded: string | null;
+  photos: { id: string; url: string }[];
 };
 
 const EMPTY_FORM = {
@@ -38,7 +41,9 @@ export function TourManager({
   initialTours,
   dict,
   locale,
+  photoLimit,
 }: {
+  photoLimit: number;
   initialTours: Tour[];
   dict: Dictionary["dashboard"]["tours"];
   locale: Locale;
@@ -50,6 +55,7 @@ export function TourManager({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [photoTourId, setPhotoTourId] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -69,7 +75,7 @@ export function TourManager({
       return;
     }
 
-    setTours((prev) => [data.tour, ...prev]);
+    setTours((prev) => [{ ...data.tour, photos: [] }, ...prev]);
     setForm(EMPTY_FORM);
     setShowForm(false);
     router.refresh();
@@ -91,6 +97,29 @@ export function TourManager({
     ]
       .filter(Boolean)
       .join(" · ") || "—";
+
+  const photoButton = (tour: Tour) => (
+    <Button
+      variant="ghost"
+      size="sm"
+      icon={<ImagePlus className="size-4" />}
+      onClick={() => setPhotoTourId(tour.id)}
+    >
+      {dict.photosButton} ({tour.photos.length})
+    </Button>
+  );
+
+  const thumb = (tour: Tour, cls: string) => (
+    <div className={`relative flex-none overflow-hidden rounded-md bg-gray-100 ${cls}`}>
+      {tour.photos[0] ? (
+        <Image src={tour.photos[0].url} alt="" fill className="object-cover" sizes="96px" />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center text-gray-300">
+          <ImagePlus className="size-5" aria-hidden />
+        </div>
+      )}
+    </div>
+  );
 
   const deleteButton = (tour: Tour) => (
     <Button
@@ -170,12 +199,19 @@ export function TourManager({
                 <tbody className="divide-y divide-line">
                   {tours.map((tour) => (
                     <tr key={tour.id} className="hover:bg-gray-50">
-                      <td className="text-balance-wrap max-w-xs px-4 py-3 font-medium text-ink">{tour.title}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          {thumb(tour, "h-12 w-16")}
+                          <span className="text-balance-wrap max-w-xs font-medium text-ink">{tour.title}</span>
+                        </div>
+                      </td>
                       <td className="px-4 py-3 text-ink-secondary">{durationOf(tour)}</td>
                       <td className="whitespace-nowrap px-4 py-3 font-semibold text-brand-700">
                         {tour.price.toLocaleString()} {CURRENCY[locale]}
                       </td>
-                      <td className="px-4 py-3 text-right">{deleteButton(tour)}</td>
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex justify-end gap-1">{photoButton(tour)}{deleteButton(tour)}</div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -186,6 +222,7 @@ export function TourManager({
             <div className="space-y-3 md:hidden">
               {tours.map((tour) => (
                 <div key={tour.id} className="rounded-card border border-line bg-white p-4 shadow-card">
+                  <div className="mb-3 aspect-[16/9] w-full">{thumb(tour, "h-full w-full")}</div>
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="text-balance-wrap font-semibold text-ink">{tour.title}</h3>
                     <span className="whitespace-nowrap font-semibold text-brand-700">
@@ -193,13 +230,29 @@ export function TourManager({
                     </span>
                   </div>
                   <p className="mt-1 text-sm text-ink-secondary">{durationOf(tour)}</p>
-                  <div className="mt-3 flex justify-end border-t border-line pt-2">{deleteButton(tour)}</div>
+                  <div className="mt-3 flex justify-end gap-1 border-t border-line pt-2">{photoButton(tour)}{deleteButton(tour)}</div>
                 </div>
               ))}
             </div>
           </>
         )
       )}
+      {photoTourId && (() => {
+        const tour = tours.find((t) => t.id === photoTourId);
+        if (!tour) return null;
+        return (
+          <TourPhotosModal
+            open
+            onClose={() => setPhotoTourId(null)}
+            tourId={tour.id}
+            tourTitle={tour.title}
+            photos={tour.photos}
+            onChange={(photos) => setTours((prev) => prev.map((t) => (t.id === tour.id ? { ...t, photos } : t)))}
+            limit={photoLimit}
+            dict={dict}
+          />
+        );
+      })()}
     </div>
   );
 }

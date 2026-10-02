@@ -21,6 +21,7 @@ async function getTour(id: string) {
   const tour = await prisma.tour.findUnique({
     where: { id },
     include: {
+      photos: { orderBy: { order: "asc" } },
       company: {
         include: {
           photos: { orderBy: { order: "asc" } },
@@ -49,6 +50,7 @@ export default async function TourPage({ params }: { params: { id: string } }) {
   const t = dict.tour;
   const company = tour.company;
   const rating = computeRating(company.reviews);
+  const photos = tour.photos.length > 0 ? tour.photos : company.photos;
   const others = company.tours.filter((x) => x.id !== tour.id);
   const tourDict = dict.dashboard.tours;
 
@@ -79,8 +81,8 @@ export default async function TourPage({ params }: { params: { id: string } }) {
 
         <div className="mt-4 grid gap-8 lg:grid-cols-[1fr_360px]">
           <div className="min-w-0">
-            {company.photos.length > 0 ? (
-              <PhotoGallery photos={company.photos} companyName={`${tour.title} — ${company.name}`} />
+            {photos.length > 0 ? (
+              <PhotoGallery photos={photos} companyName={`${tour.title} — ${company.name}`} />
             ) : (
               <div className="flex aspect-[16/9] w-full flex-col items-center justify-center gap-2 rounded-card bg-gradient-to-br from-brand-800 to-brand-600 text-white/80">
                 <Mountain className="size-10" aria-hidden />

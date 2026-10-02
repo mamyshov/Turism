@@ -131,6 +131,21 @@ model Tour {
   excluded      String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  photos TourPhoto[]
+}
+
+/// Photos belonging to a single tour (shown on /tour/[id]; falls back to the
+/// company gallery when a tour has none).
+model TourPhoto {
+  id        String   @id @default(cuid())
+  tourId    String
+  tour      Tour     @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([tourId])
 }
 
 /// Stage 2: reviews & ratings left by tourists.

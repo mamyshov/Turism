@@ -2,6 +2,7 @@ import { requireCurrentCompany } from "@/lib/current-company";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/dictionary";
 import { TourManager } from "./TourManager";
+import { MAX_PHOTOS_PER_TOUR } from "@/lib/constants";
 
 export default async function ToursPage() {
   const company = await requireCurrentCompany();
@@ -14,6 +15,7 @@ export default async function ToursPage() {
       <p className="mb-6 text-sm text-ink-secondary">{dict.subtitle}</p>
       <TourManager
         locale={locale}
+        photoLimit={MAX_PHOTOS_PER_TOUR}
         initialTours={company.tours.map((t) => ({
           id: t.id,
           title: t.title,
@@ -24,6 +26,7 @@ export default async function ToursPage() {
           maxPeople: t.maxPeople,
           included: t.included,
           excluded: t.excluded,
+          photos: t.photos.map((p) => ({ id: p.id, url: p.url })),
         }))}
         dict={dict}
       />
