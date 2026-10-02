@@ -193,21 +193,21 @@ export default async function CompanyPage({ params }: { params: { slug: string }
     <div className="pb-24 md:pb-0">
       <div className="relative h-48 w-full bg-gradient-to-br from-brand-800 to-brand-600 sm:h-64 lg:h-80">
         {cover && (
-          <Image src={cover} alt={company.name} fill priority className="object-cover" sizes="100vw" />
+          <Image src={cover} alt={company.name} fill priority className="object-cover object-[50%_30%]" sizes="100vw" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
       </div>
 
       <div className="mx-auto max-w-container px-4 sm:px-6">
-        <div className="-mt-10 flex flex-col gap-4 sm:-mt-12 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
             <div
               aria-hidden
-              className="flex size-20 flex-none items-center justify-center rounded-card border-4 border-white bg-brand-600 text-3xl font-bold text-white shadow-card sm:size-24"
+              className="relative z-10 -mt-10 flex size-20 flex-none items-center justify-center rounded-card border-4 border-white bg-brand-600 text-3xl font-bold text-white shadow-card sm:-mt-12 sm:size-24"
             >
               {company.name.charAt(0).toUpperCase()}
             </div>
-            <div className="min-w-0 sm:pb-1">
+            <div className="min-w-0 pt-1 sm:pb-1 sm:pt-4">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-balance-wrap text-2xl font-bold text-ink sm:text-3xl">{company.name}</h1>
                 {company.tariff === "PRO" && (
