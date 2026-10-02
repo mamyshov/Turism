@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { getDictionary } from "@/lib/i18n/dictionary";
 
@@ -37,6 +38,7 @@ export default function RootLayout({
           <Navbar locale={locale} dict={dict.nav} reelsLabel={dict.reels.navLabel} />
           <main className="flex-1">{children}</main>
           <Footer tagline={dict.footer.tagline} nav={dict.nav} />
+          <MobileBottomNav dict={dict.nav} reelsLabel={dict.reels.navLabel} />
         </Providers>
       </body>
     </html>

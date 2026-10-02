@@ -45,7 +45,7 @@ export function ReelsFeed({ reels, dict }: { reels: Reel[]; dict: Dictionary["re
 
   if (reels.length === 0) {
     return (
-      <div className="flex h-[calc(100dvh-4rem)] items-center justify-center px-4 text-center">
+      <div className="flex h-[calc(100dvh-8rem)] md:h-[calc(100dvh-4rem)] items-center justify-center px-4 text-center">
         <div className="flex flex-col items-center">
           <div className="mb-3 flex size-12 items-center justify-center rounded-full bg-gray-100 text-ink-muted">
             <Film className="size-6" aria-hidden />
@@ -58,7 +58,7 @@ export function ReelsFeed({ reels, dict }: { reels: Reel[]; dict: Dictionary["re
   }
 
   return (
-    <div className="no-scrollbar h-[calc(100dvh-4rem)] snap-y snap-mandatory overflow-y-scroll bg-black">
+    <div className="no-scrollbar h-[calc(100dvh-8rem)] md:h-[calc(100dvh-4rem)] snap-y snap-mandatory overflow-y-scroll bg-black">
       {reels.map((reel) => (
         <ReelSlide
           key={reel.id}

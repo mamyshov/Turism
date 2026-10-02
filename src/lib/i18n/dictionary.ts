@@ -2,6 +2,8 @@ import { DEFAULT_LOCALE, Locale } from "./locales";
 
 export type Dictionary = {
   nav: {
+    home: string;
+    favorites: string;
     catalog: string;
     about: string;
     contacts: string;
@@ -10,6 +12,13 @@ export type Dictionary = {
     account: string;
     admin: string;
     logout: string;
+  };
+  favorites: {
+    title: string;
+    subtitle: string;
+    empty: string;
+    emptyHint: string;
+    browse: string;
   };
   footer: {
     tagline: string;
@@ -268,6 +277,8 @@ export type Dictionary = {
 const ru: Dictionary = {
   nav: {
     catalog: "Каталог",
+    home: "Главная",
+    favorites: "Избранное",
     about: "О проекте",
     contacts: "Контакты",
     login: "Войти",
@@ -275,6 +286,13 @@ const ru: Dictionary = {
     account: "Кабинет",
     admin: "Админ",
     logout: "Выйти",
+  },
+  favorites: {
+    title: "Избранное",
+    subtitle: "Турфирмы, которые вы сохранили на этом устройстве.",
+    empty: "Пока ничего не сохранено",
+    emptyHint: "Нажмите на сердце на карточке турфирмы, чтобы добавить её сюда.",
+    browse: "Открыть каталог",
   },
   footer: {
     tagline: "Платформа для турфирм и гидов Кыргызстана.",
@@ -558,6 +576,8 @@ const ru: Dictionary = {
 const ky: Dictionary = {
   nav: {
     catalog: "Каталог",
+    home: "Башкы бет",
+    favorites: "Тандалгандар",
     about: "Долбоор жөнүндө",
     contacts: "Байланыш",
     login: "Кирүү",
@@ -565,6 +585,13 @@ const ky: Dictionary = {
     account: "Кабинет",
     admin: "Админ",
     logout: "Чыгуу",
+  },
+  favorites: {
+    title: "Тандалгандар",
+    subtitle: "Бул түзмөктө сакталган турфирмалар.",
+    empty: "Азырынча эч нерсе сакталган жок",
+    emptyHint: "Турфирма карточкасындагы жүрөктү басып, ушул жерге кошуңуз.",
+    browse: "Каталогду ачуу",
   },
   footer: {
     tagline: "Кыргызстандын турфирмалары жана гиддери үчүн платформа.",
@@ -848,6 +875,8 @@ const ky: Dictionary = {
 const en: Dictionary = {
   nav: {
     catalog: "Catalog",
+    home: "Home",
+    favorites: "Favorites",
     about: "About",
     contacts: "Contacts",
     login: "Log in",
@@ -855,6 +884,13 @@ const en: Dictionary = {
     account: "Dashboard",
     admin: "Admin",
     logout: "Log out",
+  },
+  favorites: {
+    title: "Favorites",
+    subtitle: "Operators you saved on this device.",
+    empty: "Nothing saved yet",
+    emptyHint: "Tap the heart on an operator card to add it here.",
+    browse: "Browse catalog",
   },
   footer: {
     tagline: "A platform for tour operators and guides in Kyrgyzstan.",
