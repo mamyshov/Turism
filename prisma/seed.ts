@@ -250,7 +250,26 @@ async function main() {
     }
   }
 
-  console.log("✔ Seeded 8 demo companies with photos (password: demo12345)");
+  const demoReels = [
+    { slug: "song-kol-yurt-camp", file: "reel-1", caption: "Рассвет над юртами Сон-Кёля", likes: 24 },
+    { slug: "ala-archa-alpine-club", file: "reel-2", caption: "Ущелье Ала-Арча — всего час от Бишкека", likes: 17 },
+    { slug: "skazka-canyon-explorers", file: "reel-3", caption: "Каньон Сказка на закате", likes: 31 },
+    { slug: "karakol-winter-sports", file: "reel-4", caption: "Свежий снег в Караколе", likes: 12 },
+    { slug: "issyk-kul-trekking-guides", file: "reel-5", caption: "Иссык-Куль в полдень", likes: 9 },
+    { slug: "naryn-horse-adventures", file: "reel-6", caption: "Верхом по долинам Нарына", likes: 5 },
+  ];
+  for (const r of demoReels) {
+    const company = await prisma.company.findUnique({ where: { slug: r.slug }, include: { _count: { select: { reels: true } } } });
+    if (!company || company._count.reels > 0) continue;
+    const reel = await prisma.reel.create({
+      data: { companyId: company.id, url: `/videos/demo/${r.file}.webm`, caption: r.caption },
+    });
+    await prisma.reelLike.createMany({
+      data: Array.from({ length: r.likes }, (_, i) => ({ reelId: reel.id, visitorId: `demo-${r.file}-${i}` })),
+    });
+  }
+
+  console.log("✔ Seeded 8 demo companies with photos and 6 reels (password: demo12345)");
 }
 
 main()

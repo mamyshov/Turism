@@ -192,7 +192,9 @@ TOURS.forEach(([set, idx, imgs], t) =>
   imgs.forEach(([kind, pal], n) => JOBS.push([`t-${set}-${idx}-${n + 1}`, kind, 1000 + t * 10 + n, pal]))
 );
 
-(async () => {
+module.exports = { scene };
+
+if (require.main === module) (async () => {
   fs.mkdirSync(OUT, { recursive: true });
   const browser = await chromium.launch({ args: ["--no-sandbox"] });
   const page = await browser.newPage({ viewport: { width: W, height: H } });
